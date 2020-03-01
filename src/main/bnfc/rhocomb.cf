@@ -1,0 +1,16 @@
+_     . RProc  ::= RProc1 ;
+_     . RProc1 ::= "{" RProc "}" ;
+RZero . RComb  ::= "0" ;
+RMsg  . RComb  ::= "m" "(" RName "," RName ")" ;
+RKill . RComb  ::= "k" "(" RName ")" ;
+RDup  . RComb  ::= "d" "(" RName "," RName "," RName ")" ;
+RSeq  . RComb  ::= "s" "(" RName "," RName "," RName ")" ;
+RFwd  . RComb  ::= "fw" "(" RName "," RName ")" ;
+RBrl  . RComb  ::= "bl" "(" RName "," RName ")" ;
+RBrr  . RComb  ::= "br" "(" RName "," RName ")" ;
+
+RInj  . RProc1 ::= RComb ;
+RStr  . RProc1 ::= "*" "(" RName ")" ;
+RPar  . RProc  ::= RProc "|" RProc1 ;
+
+RQuot . RName  ::= "@" RProc
