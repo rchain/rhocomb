@@ -4,21 +4,22 @@ package coop.rchain.rhocomb.repl
  * Node of abstract syntax tree.
  */
 abstract class RhoCombExp
+trait ArithmeticExp
 
 /**
  * Numeric literal expression.
  */
-case class Num (i : Int) extends RhoCombExp
+case class Num (i : Int) extends RhoCombExp with ArithmeticExp
 
 /**
  * Addition of two expressions.
  */
-case class Add (l : RhoCombExp, r : RhoCombExp) extends RhoCombExp
+case class Add (l : RhoCombExp, r : RhoCombExp) extends RhoCombExp with ArithmeticExp
 
 /**
  * Multiplication of two expressions.
  */
-case class Mul (l : RhoCombExp, r : RhoCombExp) extends RhoCombExp
+case class Mul (l : RhoCombExp, r : RhoCombExp) extends RhoCombExp with ArithmeticExp
 
 trait RProcExp 
 trait RCombExp extends RProcExp

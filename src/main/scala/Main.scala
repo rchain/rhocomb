@@ -28,6 +28,7 @@ object Main extends ParsingREPL[RhoCombExp] {
   import org.bitbucket.inkytonik.kiama.util.Messaging.{message, Messages}
 
   import Evaluator.value
+  import Evaluator.reduce
   import PrettyPrinter.{any, layout}
   import Optimiser.optimise
   import Optimiser.normalizeProcess
@@ -54,10 +55,18 @@ object Main extends ParsingREPL[RhoCombExp] {
     output.emitln (layout (any (e)))
     output.emitln ("e tree pretty printed:")
     output.emitln (layout (e))
-    output.emitln ("value (e) = " + value (e))
-    val o = optimise (e)
-    output.emitln ("e optimised = " + o)
-    output.emitln ("value (e optimised) = " + value (o))
+
+    e match {
+      case _ : ArithmeticExp => {
+        output.emitln ("value (e) = " + value (e))
+        val o = optimise (e)
+        output.emitln ("e optimised = " + o)
+        output.emitln ("value (e optimised) = " + value (o))
+      }
+      case rproc : RProcExp => {
+        output.emitln ( s"reduction (${rproc}) = ${reduce (rproc)}" )
+      }
+    }
   }
 
   override def processline(
