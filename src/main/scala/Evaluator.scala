@@ -32,22 +32,51 @@ object Evaluator extends Attribution {
         }
         else dppar
       }
+      case dppar@RParExp( RMsgExp( ma, mp ), RDupExp( a, b, c ) ) => {
+        if ( a == ma ) {
+          RParExp( RMsgExp( b, mp ), RMsgExp( c, mp ) )
+        }
+        else dppar
+      }
       case kppar@RParExp( RKillExp( a ), RMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RZeroExp } else kppar
+      }
+      case kppar@RParExp( RMsgExp( ma, mp ), RKillExp( a ) ) => {
         if ( a == ma ) { RZeroExp } else kppar
       }
       case fwppar@RParExp( RFwdExp( a, b ), RMsgExp( ma, mp ) ) => {
         if ( a == ma ) { RMsgExp( b, mp ) } else fwppar
       }
+      case fwppar@RParExp( RMsgExp( ma, mp ), RFwdExp( a, b ) ) => {
+        if ( a == ma ) { RMsgExp( b, mp ) } else fwppar
+      }
       case blppar@RParExp( RBrlExp( a, b ), RMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RFwdExp( mp, b ) } else blppar
+      }
+      case blppar@RParExp( RMsgExp( ma, mp ), RBrlExp( a, b ) ) => {
         if ( a == ma ) { RFwdExp( mp, b ) } else blppar
       }
       case brppar@RParExp( RBrrExp( a, b ), RMsgExp( ma, mp ) ) => {
         if ( a == ma ) { RFwdExp( b, mp ) } else brppar
       }
+      case brppar@RParExp( RMsgExp( ma, mp ), RBrrExp( a, b ) ) => {
+        if ( a == ma ) { RFwdExp( b, mp ) } else brppar
+      }
       case sppar@RParExp( RSeqExp( a, b, c ), RMsgExp( ma, mp ) ) => {
         if ( a == ma ) { RFwdExp( b, c ) } else sppar
       }
+      case sppar@RParExp( RMsgExp( ma, mp ), RSeqExp( a, b, c ) ) => {
+        if ( a == ma ) { RFwdExp( b, c ) } else sppar
+      }
       case strppar@RParExp( RStrExp( a ), RMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { 
+          mp match { 
+            case RQuotExp( p ) => p
+            case _ => throw new Exception( s"unexpected nominal: ${mp}" )
+          } 
+        } else strppar
+      }
+      case strppar@RParExp( RMsgExp( ma, mp ), RStrExp( a ) ) => {
         if ( a == ma ) { 
           mp match { 
             case RQuotExp( p ) => p

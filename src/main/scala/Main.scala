@@ -37,11 +37,12 @@ object Main extends ParsingREPL[RhoCombExp] {
   val parser = parsers.exp
 
   val banner =
-    """Enter expressions using numbers, addition and multiplication.
-          |  e.g., (1 + 2) * 3 or 0 + 4 * 1
+    """Enter expressions using the rho combinators.
+          |  e.g., k(@0)|m(@0,@0)
           |""".stripMargin
+  val lvl : Int = 0
 
-  override def prompt () = "exp> "
+  override def prompt () = "rho> "
 
   /**
     * Print the expression as a value, as a tree, pretty printed.
@@ -50,22 +51,30 @@ object Main extends ParsingREPL[RhoCombExp] {
     */
   override def process (source : Source, e : RhoCombExp, config : REPLConfig) {
     val output = config.output()
-    output.emitln ("e = " + e)
-    output.emitln ("e tree:")
-    output.emitln (layout (any (e)))
-    output.emitln ("e tree pretty printed:")
-    output.emitln (layout (e))
+    lvl match {
+      case l2 if l2 > 2 => {
+        output.emitln ("e = " + e)
+        output.emitln ("e tree:")
+        output.emitln (layout (any (e)))
+        output.emitln ("e tree pretty printed:")
+
+        val ppE = layout (e)
+        output.emitln (ppE)
+      }
+      case _ => { }
+    }
 
     e match {
+      case rproc : RProcExp => {
+        //output.emitln ( s"in rproc case" )
+        output.emitln ( s"${layout( reduce (rproc) )}" )
+      }
       case _ : ArithmeticExp => {
         output.emitln ("value (e) = " + value (e))
         val o = optimise (e)
         output.emitln ("e optimised = " + o)
         output.emitln ("value (e optimised) = " + value (o))
-      }
-      case rproc : RProcExp => {
-        output.emitln ( s"reduction (${rproc}) = ${reduce (rproc)}" )
-      }
+      }     
     }
   }
 
@@ -74,8 +83,10 @@ object Main extends ParsingREPL[RhoCombExp] {
     console : org.bitbucket.inkytonik.kiama.util.Console,
     config  : org.bitbucket.inkytonik.kiama.util.REPLConfig
   ) : Option[org.bitbucket.inkytonik.kiama.util.REPLConfig] = {
+    val output = config.output()
     if (config.processWhitespaceLines() || (source.content.trim.length != 0)) {
       try {
+        //output.emitln( "trying rproc parse first" )
         val l   = new Yylex( new StringReader( source.content ) )
         val p   = new parser(l, l.getSymbolFactory())
         val ast = p.pRProc()
@@ -83,6 +94,8 @@ object Main extends ParsingREPL[RhoCombExp] {
       }
       catch {
         case except : Throwable => {
+          //output.emitln( s"${except}" )
+          //output.emitln( "failed rproc parse; trying arithmetic parse" )
           parsers.parseAll(parser, source) match {
             case Success(e, _) =>
               process(source, e, config)
