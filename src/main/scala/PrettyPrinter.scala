@@ -15,9 +15,10 @@ object PrettyPrinter extends org.bitbucket.inkytonik.kiama.output.PrettyPrinter 
      */
     def show (t : RhoCombExp) : Doc =
         t match {
-            case Num (d)      => value (d)
-            case Add (l, r)   => showbin (l, "+", r)
-            case Mul (l, r)   => showbin (l, "*", r)
+          case Num (d)          => value (d)
+          case Add (l, r)       => showbin (l, "+", r)
+          case Mul (l, r)       => showbin (l, "*", r)
+          case rproc : RProcExp => s"${rproc}"
         }
 
     /**
