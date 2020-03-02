@@ -1,5 +1,11 @@
 package coop.rchain.rhocomb.repl
 import org.bitbucket.inkytonik.kiama.util.ParsingREPL
+import org.bitbucket.inkytonik.kiama.util.REPLConfig
+
+import rhocomb._;
+import rhocomb.Absyn._;
+import java.io._;
+import java_cup.runtime._;
 
 /**
  * A top-level read-eval-print loop.  Reads a simple arithmetic expression
@@ -17,37 +23,65 @@ import org.bitbucket.inkytonik.kiama.util.ParsingREPL
  */
 object Main extends ParsingREPL[RhoCombExp] {
 
-    import org.bitbucket.inkytonik.kiama.util.{REPLConfig, Source}
-    import Evaluator.value
-    import PrettyPrinter.{any, layout}
-    import Optimiser.optimise
+  import org.bitbucket.inkytonik.kiama.util.{REPLConfig, Source}
+  // import org.bitbucket.inkytonik.kiama.parsing.{NoSuccess, ParseResult, Success}
+  // import org.bitbucket.inkytonik.kiama.util.Messaging.{message, Messages}
 
-    val parsers = new SyntaxAnalyser (positions)
-    val parser = parsers.exp
+  import Evaluator.value
+  import PrettyPrinter.{any, layout}
+  import Optimiser.optimise
 
-    val banner =
-        """Enter expressions using numbers, addition and multiplication.
+  val parsers = new SyntaxAnalyser (positions)
+  val parser = parsers.exp
+
+  val banner =
+    """Enter expressions using numbers, addition and multiplication.
           |  e.g., (1 + 2) * 3 or 0 + 4 * 1
           |""".stripMargin
 
-    override def prompt () = "exp> "
+  override def prompt () = "exp> "
 
-    /**
-     * Print the expression as a value, as a tree, pretty printed.
-     * Print its value. Optimise it and then print the optimised
-     * expression and its value.
-     */
-    override def process (source : Source, e : RhoCombExp, config : REPLConfig) {
-        val output = config.output()
-        output.emitln ("e = " + e)
-        output.emitln ("e tree:")
-        output.emitln (layout (any (e)))
-        output.emitln ("e tree pretty printed:")
-        output.emitln (layout (e))
-        output.emitln ("value (e) = " + value (e))
-        val o = optimise (e)
-        output.emitln ("e optimised = " + o)
-        output.emitln ("value (e optimised) = " + value (o))
-    }
+  /**
+    * Print the expression as a value, as a tree, pretty printed.
+    * Print its value. Optimise it and then print the optimised
+    * expression and its value.
+    */
+  override def process (source : Source, e : RhoCombExp, config : REPLConfig) {
+    val output = config.output()
+    output.emitln ("e = " + e)
+    output.emitln ("e tree:")
+    output.emitln (layout (any (e)))
+    output.emitln ("e tree pretty printed:")
+    output.emitln (layout (e))
+    output.emitln ("value (e) = " + value (e))
+    val o = optimise (e)
+    output.emitln ("e optimised = " + o)
+    output.emitln ("value (e optimised) = " + value (o))
+  }
+
+  // override def processline(source : Source, console : Console, config : REPLConfig) : Option[REPLConfig] = {
+  //   if (config.processWhitespaceLines() || (source.content.trim.length != 0)) {
+  //     try {
+  //       val l   = new Yylex( new StringReader( source.content ) )
+  //       val p   = new parser(l, l.getSymbolFactory())
+  //       val ast = p.pRProc()
+  //     }
+  //     catch {
+  //       case except : Throwable => {
+  //         parse(source) match {
+  //           case Success(e, _) =>
+  //             process(source, e, config)
+  //           case res : NoSuccess =>
+  //             val pos = res.next.position
+  //             positions.setStart(res, pos)
+  //             positions.setFinish(res, pos)
+  //             val messages = message(res, res.message)
+  //             report(source, messages, config)
+  //         }
+  //       }
+  //     }      
+  //   }
+  //   Some(config)
+  // }
 
 }

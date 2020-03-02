@@ -22,8 +22,8 @@ object Evaluator extends Attribution {
       case d@RDupExp( _, _, _ ) => d
       case k@RKillExp( _ )      => k
       case fw@RFwdExp( _, _ )   => fw
-      case bl@RBlExp( _, _ )    => bl
-      case br@RBrExp( _, _ )    => br
+      case bl@RBrlExp( _, _ )   => bl
+      case br@RBrrExp( _, _ )   => br
       case s@RSeqExp( _, _, _ ) => s
       case u@RStrExp( _ )       => u
       case dppar@RParExp( RDupExp( a, b, c ), RMsgExp( ma, mp ) ) => {
@@ -38,10 +38,10 @@ object Evaluator extends Attribution {
       case fwppar@RParExp( RFwdExp( a, b ), RMsgExp( ma, mp ) ) => {
         if ( a == ma ) { RMsgExp( b, mp ) } else fwppar
       }
-      case blppar@RParExp( RBlExp( a, b ), RMsgExp( ma, mp ) ) => {
+      case blppar@RParExp( RBrlExp( a, b ), RMsgExp( ma, mp ) ) => {
         if ( a == ma ) { RFwdExp( mp, b ) } else blppar
       }
-      case brppar@RParExp( RBrExp( a, b ), RMsgExp( ma, mp ) ) => {
+      case brppar@RParExp( RBrrExp( a, b ), RMsgExp( ma, mp ) ) => {
         if ( a == ma ) { RFwdExp( b, mp ) } else brppar
       }
       case sppar@RParExp( RSeqExp( a, b, c ), RMsgExp( ma, mp ) ) => {

@@ -1,4 +1,5 @@
 package coop.rchain.rhocomb.repl
+
 /**
  * Node of abstract syntax tree.
  */
@@ -19,20 +20,20 @@ case class Add (l : RhoCombExp, r : RhoCombExp) extends RhoCombExp
  */
 case class Mul (l : RhoCombExp, r : RhoCombExp) extends RhoCombExp
 
-trait RProc
-trait RComb extends RProc
-trait RName
+trait RProcExp 
+trait RCombExp extends RProcExp
+trait RNameExp
 
-case object RZeroExp                                    extends RhoCombExp with RComb
-case class  RMsgExp ( a : RName, p : RName )            extends RhoCombExp with RComb
-case class  RDupExp ( a : RName, b : RName, c : RName ) extends RhoCombExp with RComb
-case class  RKillExp( a : RName )                       extends RhoCombExp with RComb
-case class  RFwdExp ( a : RName, b : RName )            extends RhoCombExp with RComb
-case class  RBlExp  ( a : RName, b : RName )            extends RhoCombExp with RComb
-case class  RBrExp  ( a : RName, b : RName )            extends RhoCombExp with RComb
-case class  RSeqExp ( a : RName, b : RName, c : RName ) extends RhoCombExp with RComb
+case object RZeroExp                                             extends RhoCombExp with RCombExp
+case class  RMsgExp ( a : RNameExp, p : RNameExp )               extends RhoCombExp with RCombExp
+case class  RDupExp ( a : RNameExp, b : RNameExp, c : RNameExp ) extends RhoCombExp with RCombExp
+case class  RKillExp( a : RNameExp )                             extends RhoCombExp with RCombExp
+case class  RFwdExp ( a : RNameExp, b : RNameExp )               extends RhoCombExp with RCombExp
+case class  RBrlExp ( a : RNameExp, b : RNameExp )               extends RhoCombExp with RCombExp
+case class  RBrrExp ( a : RNameExp, b : RNameExp )               extends RhoCombExp with RCombExp
+case class  RSeqExp ( a : RNameExp, b : RNameExp, c : RNameExp ) extends RhoCombExp with RCombExp
 
-case class RStrExp  ( a : RName )                       extends RhoCombExp with RComb
-case class RParExp  ( l : RhoCombExp, r : RhoCombExp )  extends RhoCombExp with RProc
+case class  RStrExp  ( a : RNameExp )                            extends RhoCombExp with RCombExp
+case class  RParExp  ( l : RhoCombExp, r : RhoCombExp )          extends RhoCombExp with RProcExp
 
-case class RQuotExp( p : RhoCombExp )                   extends RName
+case class  RQuotExp( p : RhoCombExp )                           extends RNameExp
