@@ -34,7 +34,7 @@ case class  RBrlExp ( a : RNameExp, b : RNameExp )               extends RhoComb
 case class  RBrrExp ( a : RNameExp, b : RNameExp )               extends RhoCombExp with RCombExp
 case class  RSeqExp ( a : RNameExp, b : RNameExp, c : RNameExp ) extends RhoCombExp with RCombExp
 
-case class  RStrExp  ( a : RNameExp )                            extends RhoCombExp with RCombExp
+case class  RStrExp  ( a : RNameExp )                            extends RhoCombExp with RProcExp
 case class  RParExp  ( l : RhoCombExp, r : RhoCombExp )          extends RhoCombExp with RProcExp
 
 case class  RQuotExp( p : RhoCombExp )                           extends RNameExp
