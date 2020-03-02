@@ -24,12 +24,13 @@ import java_cup.runtime._;
 object Main extends ParsingREPL[RhoCombExp] {
 
   import org.bitbucket.inkytonik.kiama.util.{REPLConfig, Source}
-  // import org.bitbucket.inkytonik.kiama.parsing.{NoSuccess, ParseResult, Success}
-  // import org.bitbucket.inkytonik.kiama.util.Messaging.{message, Messages}
+  import org.bitbucket.inkytonik.kiama.parsing.{NoSuccess, ParseResult, Success}
+  import org.bitbucket.inkytonik.kiama.util.Messaging.{message, Messages}
 
   import Evaluator.value
   import PrettyPrinter.{any, layout}
   import Optimiser.optimise
+  import Optimiser.normalizeProcess
 
   val parsers = new SyntaxAnalyser (positions)
   val parser = parsers.exp
@@ -59,29 +60,34 @@ object Main extends ParsingREPL[RhoCombExp] {
     output.emitln ("value (e optimised) = " + value (o))
   }
 
-  // override def processline(source : Source, console : Console, config : REPLConfig) : Option[REPLConfig] = {
-  //   if (config.processWhitespaceLines() || (source.content.trim.length != 0)) {
-  //     try {
-  //       val l   = new Yylex( new StringReader( source.content ) )
-  //       val p   = new parser(l, l.getSymbolFactory())
-  //       val ast = p.pRProc()
-  //     }
-  //     catch {
-  //       case except : Throwable => {
-  //         parse(source) match {
-  //           case Success(e, _) =>
-  //             process(source, e, config)
-  //           case res : NoSuccess =>
-  //             val pos = res.next.position
-  //             positions.setStart(res, pos)
-  //             positions.setFinish(res, pos)
-  //             val messages = message(res, res.message)
-  //             report(source, messages, config)
-  //         }
-  //       }
-  //     }      
-  //   }
-  //   Some(config)
-  // }
+  override def processline(
+    source  : org.bitbucket.inkytonik.kiama.util.Source,
+    console : org.bitbucket.inkytonik.kiama.util.Console,
+    config  : org.bitbucket.inkytonik.kiama.util.REPLConfig
+  ) : Option[org.bitbucket.inkytonik.kiama.util.REPLConfig] = {
+    if (config.processWhitespaceLines() || (source.content.trim.length != 0)) {
+      try {
+        val l   = new Yylex( new StringReader( source.content ) )
+        val p   = new parser(l, l.getSymbolFactory())
+        val ast = p.pRProc()
+        process( source, normalizeProcess( ast ), config )
+      }
+      catch {
+        case except : Throwable => {
+          parsers.parseAll(parser, source) match {
+            case Success(e, _) =>
+              process(source, e, config)
+            case res : NoSuccess =>
+              val pos = res.next.position
+              positions.setStart(res, pos)
+              positions.setFinish(res, pos)
+              val messages = message(res, res.message)
+              report(messages, config.output())
+          }
+        }
+      }      
+    }
+    Some(config)
+  }
 
 }
