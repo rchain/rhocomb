@@ -1,0 +1,47 @@
+JAVAC=javac
+JAVAC_FLAGS=-sourcepath . -cp /Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b-runtime.jar:/Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b.jar:/Users/lgm/work/src/devtools/jlex/JLex-0.0.jar
+JAVA=java
+JAVA_FLAGS= -cp /Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b-runtime.jar:/Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b.jar:/Users/lgm/work/src/devtools/jlex/JLex-0.0.jar
+PARSER=${JAVA} ${JAVA_FLAGS} java_cup.Main
+PARSER_FLAGS=-nopositions -expect 100
+LEXER=${JAVA} ${JAVA_FLAGS} JLex.Main
+LEXER_FLAGS=
+all: test
+
+test: absyn asyncpi/Yylex.class asyncpi/PrettyPrinter.class asyncpi/Test.class asyncpi/ComposVisitor.class asyncpi/AbstractVisitor.class asyncpi/FoldVisitor.class asyncpi/AllVisitor.class asyncpi/parser.class asyncpi/sym.class asyncpi/Test.class
+
+.PHONY: absyn
+
+%.class: %.java
+	${JAVAC} ${JAVAC_FLAGS} $^
+
+absyn: asyncpi/Absyn/PProc.java asyncpi/Absyn/PInj.java asyncpi/Absyn/PRep.java asyncpi/Absyn/PNew.java asyncpi/Absyn/PPar.java asyncpi/Absyn/PComp.java asyncpi/Absyn/PZero.java asyncpi/Absyn/PInp.java asyncpi/Absyn/POutp.java asyncpi/Absyn/PName.java asyncpi/Absyn/NWild.java asyncpi/Absyn/NVar.java asyncpi/Absyn/ListPName.java asyncpi/Absyn/PVar.java asyncpi/Absyn/PWild.java asyncpi/Absyn/PVVar.java
+	${JAVAC} ${JAVAC_FLAGS} $^
+
+asyncpi/Yylex.java: asyncpi/Yylex
+	${LEXER} ${LEXER_FLAGS} asyncpi/Yylex
+
+asyncpi/parser.java asyncpi/sym.java: asyncpi/_cup.cup
+	${PARSER} ${PARSER_FLAGS} asyncpi/_cup.cup
+	mv parser.java sym.java asyncpi/
+
+asyncpi/Yylex.class: asyncpi/Yylex.java asyncpi/parser.java asyncpi/sym.java
+
+asyncpi/sym.class: asyncpi/sym.java
+
+asyncpi/parser.class: asyncpi/parser.java asyncpi/sym.java
+
+asyncpi/PrettyPrinter.class: asyncpi/PrettyPrinter.java
+
+clean:
+	rm -f asyncpi/Absyn/*.class asyncpi/*.class
+
+distclean: vclean
+
+vclean:
+	 rm -f asyncpi/Absyn/PProc.java asyncpi/Absyn/PInj.java asyncpi/Absyn/PRep.java asyncpi/Absyn/PNew.java asyncpi/Absyn/PPar.java asyncpi/Absyn/PComp.java asyncpi/Absyn/PZero.java asyncpi/Absyn/PInp.java asyncpi/Absyn/POutp.java asyncpi/Absyn/PName.java asyncpi/Absyn/NWild.java asyncpi/Absyn/NVar.java asyncpi/Absyn/ListPName.java asyncpi/Absyn/PVar.java asyncpi/Absyn/PWild.java asyncpi/Absyn/PVVar.java asyncpi/Absyn/PProc.class asyncpi/Absyn/PInj.class asyncpi/Absyn/PRep.class asyncpi/Absyn/PNew.class asyncpi/Absyn/PPar.class asyncpi/Absyn/PComp.class asyncpi/Absyn/PZero.class asyncpi/Absyn/PInp.class asyncpi/Absyn/POutp.class asyncpi/Absyn/PName.class asyncpi/Absyn/NWild.class asyncpi/Absyn/NVar.class asyncpi/Absyn/ListPName.class asyncpi/Absyn/PVar.class asyncpi/Absyn/PWild.class asyncpi/Absyn/PVVar.class
+	 rm -f asyncpi/Absyn/*.class
+	 rmdir asyncpi/Absyn/
+	 rm -f asyncpi/Yylex asyncpi/_cup.cup asyncpi/Yylex.java asyncpi/VisitSkel.java asyncpi/ComposVisitor.java asyncpi/AbstractVisitor.java asyncpi/FoldVisitor.java asyncpi/AllVisitor.java asyncpi/PrettyPrinter.java asyncpi/Skeleton.java asyncpi/Test.java asyncpi/parser.java asyncpi/sym.java asyncpi/*.class
+	 rm -f Makefile
+	 rmdir -p asyncpi/

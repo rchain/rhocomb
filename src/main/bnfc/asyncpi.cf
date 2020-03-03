@@ -1,0 +1,22 @@
+_     . PProc  ::= PProc1 ;
+_     . PProc1 ::= "{" PProc "}" ;
+PZero . PComp  ::= "0" ;
+PInp  . PComp  ::= "for" "(" PName "<-" PName ")" PProc1 ;
+POutp . PComp  ::= PName "!" "(" PName ")" ;
+
+PInj  . PProc1 ::= PComp ;
+PRep  . PProc1 ::= "*" PProc1 ;
+PNew  . PProc1 ::= "new" [PName] "in" PProc1 ;
+
+PPar  . PProc  ::= PProc "|" PProc1 ;
+
+-- Names
+NWild . PName  ::= "_" ;
+NVar  . PName  ::= Var ;
+separator PName "," ;
+
+-- Process variables
+PWild . PVar   ::= "_" ;
+PVVar . PVar   ::= Var ;
+
+token Var (((letter | '\'') (letter | digit | '_' | '\'')*)|(('_') (letter | digit | '_' | '\'')+)) ;
