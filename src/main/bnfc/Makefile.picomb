@@ -1,0 +1,47 @@
+JAVAC=javac
+JAVAC_FLAGS=-sourcepath . -cp /Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b-runtime.jar:/Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b.jar:/Users/lgm/work/src/devtools/jlex/JLex-0.0.jar
+JAVA=java
+JAVA_FLAGS= -cp /Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b-runtime.jar:/Users/lgm/work/src/devtools/java-cup-bin-11b-20160615/java-cup-11b.jar:/Users/lgm/work/src/devtools/jlex/JLex-0.0.jar
+PARSER=${JAVA} ${JAVA_FLAGS} java_cup.Main
+PARSER_FLAGS=-nopositions -expect 100
+LEXER=${JAVA} ${JAVA_FLAGS} JLex.Main
+LEXER_FLAGS=
+all: test
+
+test: absyn picomb/Yylex.class picomb/PrettyPrinter.class picomb/Test.class picomb/ComposVisitor.class picomb/AbstractVisitor.class picomb/FoldVisitor.class picomb/AllVisitor.class picomb/parser.class picomb/sym.class picomb/Test.class
+
+.PHONY: absyn
+
+%.class: %.java
+	${JAVAC} ${JAVAC_FLAGS} $^
+
+absyn: picomb/Absyn/YProc.java picomb/Absyn/YInj.java picomb/Absyn/YStr.java picomb/Absyn/YNew.java picomb/Absyn/YPar.java picomb/Absyn/YComb.java picomb/Absyn/YZero.java picomb/Absyn/YMsg.java picomb/Absyn/YKill.java picomb/Absyn/YDup.java picomb/Absyn/YSeq.java picomb/Absyn/YFwd.java picomb/Absyn/YBrl.java picomb/Absyn/YBrr.java picomb/Absyn/YName.java picomb/Absyn/NWild.java picomb/Absyn/NVar.java picomb/Absyn/ListYName.java picomb/Absyn/YVar.java picomb/Absyn/YWild.java picomb/Absyn/YVVar.java
+	${JAVAC} ${JAVAC_FLAGS} $^
+
+picomb/Yylex.java: picomb/Yylex
+	${LEXER} ${LEXER_FLAGS} picomb/Yylex
+
+picomb/parser.java picomb/sym.java: picomb/_cup.cup
+	${PARSER} ${PARSER_FLAGS} picomb/_cup.cup
+	mv parser.java sym.java picomb/
+
+picomb/Yylex.class: picomb/Yylex.java picomb/parser.java picomb/sym.java
+
+picomb/sym.class: picomb/sym.java
+
+picomb/parser.class: picomb/parser.java picomb/sym.java
+
+picomb/PrettyPrinter.class: picomb/PrettyPrinter.java
+
+clean:
+	rm -f picomb/Absyn/*.class picomb/*.class
+
+distclean: vclean
+
+vclean:
+	 rm -f picomb/Absyn/YProc.java picomb/Absyn/YInj.java picomb/Absyn/YStr.java picomb/Absyn/YNew.java picomb/Absyn/YPar.java picomb/Absyn/YComb.java picomb/Absyn/YZero.java picomb/Absyn/YMsg.java picomb/Absyn/YKill.java picomb/Absyn/YDup.java picomb/Absyn/YSeq.java picomb/Absyn/YFwd.java picomb/Absyn/YBrl.java picomb/Absyn/YBrr.java picomb/Absyn/YName.java picomb/Absyn/NWild.java picomb/Absyn/NVar.java picomb/Absyn/ListYName.java picomb/Absyn/YVar.java picomb/Absyn/YWild.java picomb/Absyn/YVVar.java picomb/Absyn/YProc.class picomb/Absyn/YInj.class picomb/Absyn/YStr.class picomb/Absyn/YNew.class picomb/Absyn/YPar.class picomb/Absyn/YComb.class picomb/Absyn/YZero.class picomb/Absyn/YMsg.class picomb/Absyn/YKill.class picomb/Absyn/YDup.class picomb/Absyn/YSeq.class picomb/Absyn/YFwd.class picomb/Absyn/YBrl.class picomb/Absyn/YBrr.class picomb/Absyn/YName.class picomb/Absyn/NWild.class picomb/Absyn/NVar.class picomb/Absyn/ListYName.class picomb/Absyn/YVar.class picomb/Absyn/YWild.class picomb/Absyn/YVVar.class
+	 rm -f picomb/Absyn/*.class
+	 rmdir picomb/Absyn/
+	 rm -f picomb/Yylex picomb/_cup.cup picomb/Yylex.java picomb/VisitSkel.java picomb/ComposVisitor.java picomb/AbstractVisitor.java picomb/FoldVisitor.java picomb/AllVisitor.java picomb/PrettyPrinter.java picomb/Skeleton.java picomb/Test.java picomb/parser.java picomb/sym.java picomb/*.class
+	 rm -f Makefile
+	 rmdir -p picomb/

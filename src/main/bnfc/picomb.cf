@@ -1,0 +1,27 @@
+_     . YProc  ::= YProc1 ;
+_     . YProc1 ::= "{" YProc "}" ;
+YZero . YComb  ::= "0" ;
+YMsg  . YComb  ::= "m" "(" YName "," YName ")" ;
+YKill . YComb  ::= "k" "(" YName ")" ;
+YDup  . YComb  ::= "d" "(" YName "," YName "," YName ")" ;
+YSeq  . YComb  ::= "s" "(" YName "," YName "," YName ")" ;
+YFwd  . YComb  ::= "fw" "(" YName "," YName ")" ;
+YBrl  . YComb  ::= "bl" "(" YName "," YName ")" ;
+YBrr  . YComb  ::= "br" "(" YName "," YName ")" ;
+
+YInj  . YProc1 ::= YComb ;
+YStr  . YProc1 ::= "*" YProc1 ;
+YNew  . YProc1 ::= "new" [YName] "in" YProc1 ;
+
+YPar  . YProc  ::= YProc "|" YProc1 ;
+
+-- Names
+NWild . YName  ::= "_" ;
+NVar  . YName  ::= CVar ;
+separator YName "," ;
+
+-- Process variables
+YWild . YVar   ::= "_" ;
+YVVar . YVar   ::= CVar ;
+
+token CVar (((letter | '\'') (letter | digit | '_' | '\'')*)|(('_') (letter | digit | '_' | '\'')+)) ;
