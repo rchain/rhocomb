@@ -1,0 +1,74 @@
+RqP2R    . Req      ::= "!toRho" RCPProc ;
+RqY2R    . Req      ::= "!toRho" RCYProc ;
+RqP2Y    . Req      ::= "!toCC" RCPProc ;
+
+RqEval   . Req      ::= RCRProc ;
+RqCmd    . Req      ::= ":q" ;
+
+_        . RCPProc  ::= RCPProc1 ;
+_        . RCPProc1 ::= "{" RCPProc "}" ;
+RCPZero  . RCPComp  ::= "0" ;
+RCPInp   . RCPComp  ::= "for" "(" RCPName "<-" RCPName ")" RCPProc1 ;
+RCPOutp  . RCPComp  ::= RCPName "!" "(" RCPName ")" ;
+
+RCPInj   . RCPProc1 ::= RCPComp ;
+RCPRep   . RCPProc1 ::= "*" RCPProc1 ;
+RCPNew   . RCPProc1 ::= "new" [RCPName] "in" RCPProc1 ;
+
+RCPPar   . RCPProc  ::= RCPProc "|" RCPProc1 ;
+
+-- Names
+RCPNWild . RCPName  ::= "_" ;
+RCPNVar  . RCPName  ::= Var ;
+separator RCPName "," ;
+
+-- Process variables
+RCPPWild . RCPVar   ::= "_" ;
+RCPPVVar . RCPVar   ::= Var ;
+
+_        . RCYProc  ::= RCYProc1 ;
+_        . RCYProc1 ::= "{" RCYProc "}" ;
+RCYZero  . RCYComb  ::= "0" ;
+RCYMsg   . RCYComb  ::= "m" "(" RCYName "," RCYName ")" ;
+RCYKill  . RCYComb  ::= "k" "(" RCYName ")" ;
+RCYDup   . RCYComb  ::= "d" "(" RCYName "," RCYName "," RCYName ")" ;
+RCYSeq   . RCYComb  ::= "s" "(" RCYName "," RCYName "," RCYName ")" ;
+RCYFwd   . RCYComb  ::= "fw" "(" RCYName "," RCYName ")" ;
+RCYBrl   . RCYComb  ::= "bl" "(" RCYName "," RCYName ")" ;
+RCYBrr   . RCYComb  ::= "br" "(" RCYName "," RCYName ")" ;
+
+RCYInj   . RCYProc1 ::= RCYComb ;
+RCYStr   . RCYProc1 ::= "*" RCYProc1 ;
+RCYNew   . RCYProc1 ::= "new" [RCYName] "in" RCYProc1 ;
+
+RCYPar   . RCYProc  ::= RCYProc "|" RCYProc1 ;
+
+-- Names
+RCYNWild . RCYName  ::= "_" ;
+RCYNVar  . RCYName  ::= CVar ;
+separator RCYName "," ;
+
+-- Process variables
+RCPYWild . RCYVar   ::= "_" ;
+RCPYVVar . RCYVar   ::= CVar ;
+
+_        . RCRProc  ::= RCRProc1 ;
+_        . RCRProc1 ::= "{" RCRProc "}" ;
+RCRZero  . RCRComb  ::= "0" ;
+RCRMsg   . RCRComb  ::= "m" "(" RCRName "," RCRName ")" ;
+RCRKill  . RCRComb  ::= "k" "(" RCRName ")" ;
+RCRDup   . RCRComb  ::= "d" "(" RCRName "," RCRName "," RCRName ")" ;
+RCRSeq   . RCRComb  ::= "s" "(" RCRName "," RCRName "," RCRName ")" ;
+RCRFwd   . RCRComb  ::= "fw" "(" RCRName "," RCRName ")" ;
+RCRBrl   . RCRComb  ::= "bl" "(" RCRName "," RCRName ")" ;
+RCRBrr   . RCRComb  ::= "br" "(" RCRName "," RCRName ")" ;
+
+RCRInj   . RCRProc1 ::= RCRComb ;
+RCRStr   . RCRProc1 ::= "*" "(" RCRName ")" ;
+RCRPar   . RCRProc  ::= RCRProc "|" RCRProc1 ;
+
+RCRQuot  . RCRName  ::= "@" RCRProc ;
+
+token CVar (((letter | '\'') (letter | digit | '_' | '\'')*)|(('_') (letter | digit | '_' | '\'')+)) ;
+
+token Var (((letter | '\'') (letter | digit | '_' | '\'')*)|(('_') (letter | digit | '_' | '\'')+)) ;
