@@ -7,15 +7,15 @@ class SyntaxAnalyser (positions : Positions) extends Parsers (positions) {
     lazy val parser =
         phrase (exp)
 
-    lazy val exp : PackratParser[RhoCombExp] =
+    lazy val exp : PackratParser[RCRhoCombExp] =
         exp ~ ("+" ~> term) ^^ Add |
         term
 
-    lazy val term : PackratParser[RhoCombExp] =
+    lazy val term : PackratParser[RCRhoCombExp] =
         term ~ ("*" ~> factor) ^^ Mul |
         factor
 
-    lazy val factor : PackratParser[RhoCombExp] =
+    lazy val factor : PackratParser[RCRhoCombExp] =
         integer | "(" ~> exp <~ ")"
 
     lazy val integer =

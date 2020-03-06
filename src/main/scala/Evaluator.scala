@@ -7,7 +7,7 @@ import org.bitbucket.inkytonik.kiama.attribution.Attribution
  */
 object Evaluator extends Attribution {
 
-  val value : RhoCombExp => Int =
+  val value : RCRhoCombExp => Int =
     attr {
       case Num (i)    => i
       case Add (l, r) => value (l) + value (r)
@@ -15,77 +15,95 @@ object Evaluator extends Attribution {
       case _          => -1
     }
 
-  val reduce : RhoCombExp => RhoCombExp =
+  val txPiToRho : RCPProcExp => RCRhoCombExp = {
+    ( rcpproc : RCPProcExp ) => {
+      RCRZeroExp
+    }
+  }
+
+  val txYToRho : RCYProcExp => RCRhoCombExp = {
+    ( rcpproc : RCYProcExp ) => {
+      RCRZeroExp
+    }
+  }
+
+  val txPiToY : RCPProcExp => RCRhoCombExp = {
+    ( rcpproc : RCPProcExp ) => {
+      RCYZeroExp
+    }
+  }
+
+  val reduce : RCRhoCombExp => RCRhoCombExp =
     attr {
-      case RZeroExp => RZeroExp
-      case m@RMsgExp( _, _ )    => m
-      case d@RDupExp( _, _, _ ) => d
-      case k@RKillExp( _ )      => k
-      case fw@RFwdExp( _, _ )   => fw
-      case bl@RBrlExp( _, _ )   => bl
-      case br@RBrrExp( _, _ )   => br
-      case s@RSeqExp( _, _, _ ) => s
-      case u@RStrExp( _ )       => u
-      case dppar@RParExp( RDupExp( a, b, c ), RMsgExp( ma, mp ) ) => {
+      case RCRZeroExp => RCRZeroExp
+      case m@RCRMsgExp( _, _ )    => m
+      case d@RCRDupExp( _, _, _ ) => d
+      case k@RCRKillExp( _ )      => k
+      case fw@RCRFwdExp( _, _ )   => fw
+      case bl@RCRBrlExp( _, _ )   => bl
+      case br@RCRBrrExp( _, _ )   => br
+      case s@RCRSeqExp( _, _, _ ) => s
+      case u@RCRStrExp( _ )       => u
+      case dppar@RCRParExp( RCRDupExp( a, b, c ), RCRMsgExp( ma, mp ) ) => {
         if ( a == ma ) {
-          RParExp( RMsgExp( b, mp ), RMsgExp( c, mp ) )
+          RCRParExp( RCRMsgExp( b, mp ), RCRMsgExp( c, mp ) )
         }
         else dppar
       }
-      case dppar@RParExp( RMsgExp( ma, mp ), RDupExp( a, b, c ) ) => {
+      case dppar@RCRParExp( RCRMsgExp( ma, mp ), RCRDupExp( a, b, c ) ) => {
         if ( a == ma ) {
-          RParExp( RMsgExp( b, mp ), RMsgExp( c, mp ) )
+          RCRParExp( RCRMsgExp( b, mp ), RCRMsgExp( c, mp ) )
         }
         else dppar
       }
-      case kppar@RParExp( RKillExp( a ), RMsgExp( ma, mp ) ) => {
-        if ( a == ma ) { RZeroExp } else kppar
+      case kppar@RCRParExp( RCRKillExp( a ), RCRMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RCRZeroExp } else kppar
       }
-      case kppar@RParExp( RMsgExp( ma, mp ), RKillExp( a ) ) => {
-        if ( a == ma ) { RZeroExp } else kppar
+      case kppar@RCRParExp( RCRMsgExp( ma, mp ), RCRKillExp( a ) ) => {
+        if ( a == ma ) { RCRZeroExp } else kppar
       }
-      case fwppar@RParExp( RFwdExp( a, b ), RMsgExp( ma, mp ) ) => {
-        if ( a == ma ) { RMsgExp( b, mp ) } else fwppar
+      case fwppar@RCRParExp( RCRFwdExp( a, b ), RCRMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RCRMsgExp( b, mp ) } else fwppar
       }
-      case fwppar@RParExp( RMsgExp( ma, mp ), RFwdExp( a, b ) ) => {
-        if ( a == ma ) { RMsgExp( b, mp ) } else fwppar
+      case fwppar@RCRParExp( RCRMsgExp( ma, mp ), RCRFwdExp( a, b ) ) => {
+        if ( a == ma ) { RCRMsgExp( b, mp ) } else fwppar
       }
-      case blppar@RParExp( RBrlExp( a, b ), RMsgExp( ma, mp ) ) => {
-        if ( a == ma ) { RFwdExp( mp, b ) } else blppar
+      case blppar@RCRParExp( RCRBrlExp( a, b ), RCRMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RCRFwdExp( mp, b ) } else blppar
       }
-      case blppar@RParExp( RMsgExp( ma, mp ), RBrlExp( a, b ) ) => {
-        if ( a == ma ) { RFwdExp( mp, b ) } else blppar
+      case blppar@RCRParExp( RCRMsgExp( ma, mp ), RCRBrlExp( a, b ) ) => {
+        if ( a == ma ) { RCRFwdExp( mp, b ) } else blppar
       }
-      case brppar@RParExp( RBrrExp( a, b ), RMsgExp( ma, mp ) ) => {
-        if ( a == ma ) { RFwdExp( b, mp ) } else brppar
+      case brppar@RCRParExp( RCRBrrExp( a, b ), RCRMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RCRFwdExp( b, mp ) } else brppar
       }
-      case brppar@RParExp( RMsgExp( ma, mp ), RBrrExp( a, b ) ) => {
-        if ( a == ma ) { RFwdExp( b, mp ) } else brppar
+      case brppar@RCRParExp( RCRMsgExp( ma, mp ), RCRBrrExp( a, b ) ) => {
+        if ( a == ma ) { RCRFwdExp( b, mp ) } else brppar
       }
-      case sppar@RParExp( RSeqExp( a, b, c ), RMsgExp( ma, mp ) ) => {
-        if ( a == ma ) { RFwdExp( b, c ) } else sppar
+      case sppar@RCRParExp( RCRSeqExp( a, b, c ), RCRMsgExp( ma, mp ) ) => {
+        if ( a == ma ) { RCRFwdExp( b, c ) } else sppar
       }
-      case sppar@RParExp( RMsgExp( ma, mp ), RSeqExp( a, b, c ) ) => {
-        if ( a == ma ) { RFwdExp( b, c ) } else sppar
+      case sppar@RCRParExp( RCRMsgExp( ma, mp ), RCRSeqExp( a, b, c ) ) => {
+        if ( a == ma ) { RCRFwdExp( b, c ) } else sppar
       }
-      case strppar@RParExp( RStrExp( a ), RMsgExp( ma, mp ) ) => {
+      case strppar@RCRParExp( RCRStrExp( a ), RCRMsgExp( ma, mp ) ) => {
         if ( a == ma ) { 
           mp match { 
-            case RQuotExp( p ) => p
+            case RCRQuotExp( p ) => p
             case _ => throw new Exception( s"unexpected nominal: ${mp}" )
           } 
         } else strppar
       }
-      case strppar@RParExp( RMsgExp( ma, mp ), RStrExp( a ) ) => {
+      case strppar@RCRParExp( RCRMsgExp( ma, mp ), RCRStrExp( a ) ) => {
         if ( a == ma ) { 
           mp match { 
-            case RQuotExp( p ) => p
+            case RCRQuotExp( p ) => p
             case _ => throw new Exception( s"unexpected nominal: ${mp}" )
           } 
         } else strppar
       }
-      case ppar@RParExp( l@RParExp( _, _ ), e ) => {
-        reduce( RParExp( reduce( l ), e ) )
+      case ppar@RCRParExp( l@RCRParExp( _, _ ), e ) => {
+        reduce( RCRParExp( reduce( l ), e ) )
       }      
     }
 

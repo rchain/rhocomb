@@ -2,8 +2,8 @@ package coop.rchain.rhocomb.repl
 import org.bitbucket.inkytonik.kiama.util.ParsingREPL
 import org.bitbucket.inkytonik.kiama.util.REPLConfig
 
-import rhocomb._;
-import rhocomb.Absyn._;
+import coop.rchain.rhocomb.pi2rhocomb._;
+import coop.rchain.rhocomb.pi2rhocomb.Absyn._;
 import java.io._;
 import java_cup.runtime._;
 
@@ -21,7 +21,7 @@ import java_cup.runtime._;
  * e optimised = Num(4)
  * value (e optimised) = 4
  */
-object Main extends ParsingREPL[RhoCombExp] {
+object Main extends ParsingREPL[RCRhoCombExp] {
 
   import org.bitbucket.inkytonik.kiama.util.{REPLConfig, Source}
   import org.bitbucket.inkytonik.kiama.parsing.{NoSuccess, ParseResult, Success}
@@ -29,9 +29,12 @@ object Main extends ParsingREPL[RhoCombExp] {
 
   import Evaluator.value
   import Evaluator.reduce
+  import Evaluator.txPiToRho
+  import Evaluator.txPiToY
+  import Evaluator.txYToRho
   import PrettyPrinter.{any, layout}
   import Optimiser.optimise
-  import Optimiser.normalizeProcess
+  import Optimiser.normalizeRCRequest
 
   val parsers = new SyntaxAnalyser (positions)
   val parser = parsers.exp
@@ -49,7 +52,7 @@ object Main extends ParsingREPL[RhoCombExp] {
     * Print its value. Optimise it and then print the optimised
     * expression and its value.
     */
-  override def process (source : Source, e : RhoCombExp, config : REPLConfig) {
+  override def process (source : Source, e : RCRhoCombExp, config : REPLConfig) {
     val output = config.output()
     lvl match {
       case l2 if l2 > 2 => {
@@ -65,9 +68,24 @@ object Main extends ParsingREPL[RhoCombExp] {
     }
 
     e match {
-      case rproc : RProcExp => {
+      case RCPiToRho( rcpproc ) => {
         //output.emitln ( s"in rproc case" )
-        output.emitln ( s"${layout( reduce (rproc) )}" )
+        output.emitln ( s"${layout( txPiToRho ( rcpproc ) )}" )
+      }
+      case RCYToRho( rcyproc ) => {
+        //output.emitln ( s"in rproc case" )
+        output.emitln ( s"${layout( txYToRho ( rcyproc ) )}" )
+      }
+      case RCPiToY( rcpproc ) => {
+        //output.emitln ( s"in rproc case" )
+        output.emitln ( s"${layout( txPiToY ( rcpproc ) )}" )
+      }
+      case RCEval( rcrproc ) => {
+        //output.emitln ( s"in rproc case" )
+        output.emitln ( s"${layout( reduce ( rcrproc ) )}" )
+      }
+      case Quit => {
+        output.emitln ( s"exiting..." )
       }
       case _ : ArithmeticExp => {
         output.emitln ("value (e) = " + value (e))
@@ -89,8 +107,10 @@ object Main extends ParsingREPL[RhoCombExp] {
         //output.emitln( "trying rproc parse first" )
         val l   = new Yylex( new StringReader( source.content ) )
         val p   = new parser(l, l.getSymbolFactory())
-        val ast = p.pRProc()
-        process( source, normalizeProcess( ast ), config )
+        //val ast = p.pRProc()
+        val ast = p.pReq()
+        //process( source, normalizeProcess( ast ), config )
+        process( source, normalizeRCRequest( ast ), config )
       }
       catch {
         case except : Throwable => {
