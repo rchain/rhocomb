@@ -25,20 +25,20 @@ case class Mul (l : RCRhoCombExp, r : RCRhoCombExp) extends RCRhoCombExp with Ar
  * Async Pi Calculus
  */
 
+trait RCUNameExp
+case object RCUWildExp                                                   extends RCUNameExp
+case class  RCUVarExp ( id : String )                                    extends RCUNameExp
+
 trait RCPProcExp
 trait RCPCompExp extends RCPProcExp
-trait RCPNameExp
 
 case object RCPZeroExp                                                    extends RCRhoCombExp with RCPCompExp
-case class  RCPInpExp  ( s : RCPNameExp, o : RCPNameExp, c : RCPProcExp ) extends RCRhoCombExp with RCPCompExp
-case class  RCPOutpExp ( s : RCPNameExp, o : RCPNameExp )                 extends RCRhoCombExp with RCPCompExp
+case class  RCPInpExp  ( s : RCUNameExp, o : RCUNameExp, c : RCPProcExp ) extends RCRhoCombExp with RCPCompExp
+case class  RCPOutpExp ( s : RCUNameExp, o : RCUNameExp )                 extends RCRhoCombExp with RCPCompExp
 
 case class  RCPRepExp ( p : RCPProcExp )                                  extends RCRhoCombExp with RCPProcExp
-case class  RCPNewExp ( ns : List[RCPNameExp], p : RCPProcExp )              extends RCRhoCombExp with RCPProcExp
+case class  RCPNewExp ( ns : List[RCUNameExp], p : RCPProcExp )              extends RCRhoCombExp with RCPProcExp
 case class  RCPParExp ( l : RCPProcExp, r : RCPProcExp )                  extends RCRhoCombExp with RCPProcExp
-
-case object RCPWildExp                                                    extends RCPNameExp
-case class  RCPVarExp ( id : String )                                     extends RCPNameExp
 
 /**
  * (Honda) Yoshida Combinators
@@ -46,23 +46,19 @@ case class  RCPVarExp ( id : String )                                     extend
 
 trait RCYProcExp
 trait RCYCombExp extends RCYProcExp
-trait RCYNameExp
 
 case object RCYZeroExp                                                   extends RCRhoCombExp with RCYCombExp
-case class  RCYMsgExp ( a : RCYNameExp, p : RCYNameExp )                 extends RCRhoCombExp with RCYCombExp
-case class  RCYDupExp ( a : RCYNameExp, b : RCYNameExp, c : RCYNameExp ) extends RCRhoCombExp with RCYCombExp
-case class  RCYKillExp( a : RCYNameExp )                                 extends RCRhoCombExp with RCYCombExp
-case class  RCYFwdExp ( a : RCYNameExp, b : RCYNameExp )                 extends RCRhoCombExp with RCYCombExp
-case class  RCYBrlExp ( a : RCYNameExp, b : RCYNameExp )                 extends RCRhoCombExp with RCYCombExp
-case class  RCYBrrExp ( a : RCYNameExp, b : RCYNameExp )                 extends RCRhoCombExp with RCYCombExp
-case class  RCYSeqExp ( a : RCYNameExp, b : RCYNameExp, c : RCYNameExp ) extends RCRhoCombExp with RCYCombExp
+case class  RCYMsgExp ( a : RCUNameExp, p : RCUNameExp )                 extends RCRhoCombExp with RCYCombExp
+case class  RCYDupExp ( a : RCUNameExp, b : RCUNameExp, c : RCUNameExp ) extends RCRhoCombExp with RCYCombExp
+case class  RCYKillExp( a : RCUNameExp )                                 extends RCRhoCombExp with RCYCombExp
+case class  RCYFwdExp ( a : RCUNameExp, b : RCUNameExp )                 extends RCRhoCombExp with RCYCombExp
+case class  RCYBrlExp ( a : RCUNameExp, b : RCUNameExp )                 extends RCRhoCombExp with RCYCombExp
+case class  RCYBrrExp ( a : RCUNameExp, b : RCUNameExp )                 extends RCRhoCombExp with RCYCombExp
+case class  RCYSeqExp ( a : RCUNameExp, b : RCUNameExp, c : RCUNameExp ) extends RCRhoCombExp with RCYCombExp
 
 case class  RCYStrExp ( p : RCYProcExp )                                 extends RCRhoCombExp with RCYProcExp
-case class  RCYNewExp ( ns : List[RCYNameExp], p : RCYProcExp )          extends RCRhoCombExp with RCYProcExp
+case class  RCYNewExp ( ns : List[RCUNameExp], p : RCYProcExp )          extends RCRhoCombExp with RCYProcExp
 case class  RCYParExp ( l : RCYProcExp, r : RCYProcExp )                 extends RCRhoCombExp with RCYProcExp
-
-case object RCYWildExp                                                   extends RCYNameExp
-case class  RCYVarExp ( id : String )                                    extends RCYNameExp
 
 /**
  * Rho Combinators

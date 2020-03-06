@@ -8,8 +8,7 @@ package coop.rchain.rhocomb.pi2rhocomb;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int CVar = 27;
-  public static final int Var = 28;
+  public static final int Var = 29;
   public static final int _SYMB_19 = 21;
   public static final int _SYMB_18 = 20;
   public static final int _SYMB_17 = 19;
@@ -31,6 +30,8 @@ public class sym {
   public static final int _SYMB_2 = 4;
   public static final int _SYMB_1 = 3;
   public static final int _SYMB_0 = 2;
+  public static final int _SYMB_26 = 28;
+  public static final int _SYMB_25 = 27;
   public static final int _SYMB_24 = 26;
   public static final int error = 1;
   public static final int _SYMB_23 = 25;
@@ -65,7 +66,8 @@ public class sym {
   "_SYMB_22",
   "_SYMB_23",
   "_SYMB_24",
-  "CVar",
+  "_SYMB_25",
+  "_SYMB_26",
   "Var"
   };
 }

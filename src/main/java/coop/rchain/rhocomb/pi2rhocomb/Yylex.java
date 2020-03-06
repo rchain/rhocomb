@@ -76,12 +76,12 @@ public class Yylex implements java_cup.runtime.Scanner {
 	private final int CHAR = 2;
 	private final int yy_state_dtrans[] = {
 		0,
-		42,
-		42,
-		42,
-		42,
-		42,
-		42
+		40,
+		40,
+		40,
+		40,
+		40,
+		40
 	};
 	private void yybegin (int state) {
 		yy_lexical_state = state;
@@ -252,38 +252,36 @@ public class Yylex implements java_cup.runtime.Scanner {
 		/* 27 */ YY_NO_ANCHOR,
 		/* 28 */ YY_NO_ANCHOR,
 		/* 29 */ YY_NO_ANCHOR,
-		/* 30 */ YY_NOT_ACCEPT,
+		/* 30 */ YY_NO_ANCHOR,
 		/* 31 */ YY_NO_ANCHOR,
-		/* 32 */ YY_NO_ANCHOR,
-		/* 33 */ YY_NOT_ACCEPT,
+		/* 32 */ YY_NOT_ACCEPT,
+		/* 33 */ YY_NO_ANCHOR,
 		/* 34 */ YY_NO_ANCHOR,
-		/* 35 */ YY_NO_ANCHOR,
-		/* 36 */ YY_NOT_ACCEPT,
+		/* 35 */ YY_NOT_ACCEPT,
+		/* 36 */ YY_NO_ANCHOR,
 		/* 37 */ YY_NO_ANCHOR,
 		/* 38 */ YY_NOT_ACCEPT,
 		/* 39 */ YY_NO_ANCHOR,
 		/* 40 */ YY_NOT_ACCEPT,
 		/* 41 */ YY_NO_ANCHOR,
-		/* 42 */ YY_NOT_ACCEPT,
+		/* 42 */ YY_NO_ANCHOR,
 		/* 43 */ YY_NO_ANCHOR
 	};
 	private int yy_cmap[] = unpackFromString(1,65538,
-"36:9,37,35,36,37,35,36:18,37,1,36:5,33,12,15,16,36,19,14,36:2,11,34:9,7,36," +
-"13,36:3,20,33:2,6,33:14,4,33:8,36:4,18,36,33,21,33,24,31,25,33,5,27,33,29,2" +
-"2,30,28,3,33,8,23,32,2,33:2,26,33:3,9,17,10,36:66,33:23,36,33:31,36,33:8,36" +
-":65280,0:2")[0];
+"36:9,37,35,36,37,35,36:18,37,14,36:5,33,10,13,15,36,17,12,36:2,9,34:9,1,19," +
+"11,36:3,20,33:26,36:4,18,36,33,21,5,23,30,24,33,3,26,33,28,22,29,27,4,33,6," +
+"2,31,33:3,25,33:2,32,7,16,8,36:66,33:23,36,33:31,36,33:8,36:65280,0:2")[0];
 
 	private int yy_rmap[] = unpackFromString(1,44,
-"0,1,2,3,4,1:7,3,1:2,3:4,1:3,3:6,1:2,5,6,7,8,9,1,10,11,12,13,14,15,16,17")[0];
+"0,1,2,3,1:9,3,1:2,3:5,1:3,3:4,1,3:2,1,4,5,6,7,1,8,9,10,11,12,13,14")[0];
 
-	private int yy_nxt[][] = unpackFromString(18,38,
-"1,2,3:5,4,3,5,6,7,8,32,35,9,10,11,12,13,14,31,3:2,15,34,3,37,43,16,17,3,18," +
-"3,35,19,35,19,-1:40,30,-1:37,3:5,-1,3,-1:2,3,-1:6,3,-1:2,3:14,-1:11,20,-1:3" +
-"2,33,-1:36,3:5,-1,3,-1:2,3,-1:6,3,-1:2,3,22,23,3:11,-1:17,21,-1:27,36,-1,38" +
-",-1:33,3,39,3:3,-1,3,-1:2,3,-1:6,3,-1:2,3:5,24,3:8,-1:8,40,-1:34,3:5,-1,3,-" +
-"1:2,3,-1:6,3,-1:2,3:7,25,3:6,-1:9,28,-1:33,3:5,-1,3,-1:2,3,-1:6,3,-1:2,3:2," +
-"26,3:11,-1:6,29,-1:36,3:5,-1,3,-1:2,3,-1:6,3,-1:2,3:5,27,3:8,-1:3,1,35:34,-" +
-"1,35:2,-1:2,3:5,-1,3,-1:2,3,-1:6,3,-1:2,3:10,41,3:3,-1:3");
+	private int yy_nxt[][] = unpackFromString(15,38,
+"1,2,3:5,4,5,6,7,33,36,8,9,10,11,12,13,14,15,34,3,16,37,3,39,43,17,18,3,19,2" +
+"0,3,36,21,36,21,-1:40,32,-1:2,35,22,-1:33,3:5,-1:2,3,-1:8,3,-1:2,3:14,-1:6," +
+"38,-1:46,23,-1:27,24,3:4,-1:2,3,-1:8,3,-1:2,3,25,3:12,-1:8,28,-1:34,3:2,41," +
+"3:2,-1:2,3,-1:8,3,-1:2,3:4,26,3:9,-1:7,31,-1:35,3:5,-1:2,3,-1:8,3,-1:2,3:6," +
+"27,3:7,-1:3,1,36:34,-1,36:2,-1:2,29,3:4,-1:2,3,-1:8,3,-1:2,3:14,-1:5,3:5,-1" +
+":2,3,-1:8,3,-1:2,3:4,30,3:9,-1:5,3:5,-1:2,3,-1:8,3,-1:2,3:9,42,3:4,-1:3");
 
 	public java_cup.runtime.Symbol next_token ()
 		throws java.io.IOException {
@@ -335,35 +333,35 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -2:
 						break;
 					case 2:
-						{ return cf.newSymbol("", sym._SYMB_9, left_loc(), right_loc()); }
+						{ throw new Error("Illegal Character <"+yytext()+">"); }
 					case -3:
 						break;
 					case 3:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
 					case -4:
 						break;
 					case 4:
-						{ throw new Error("Illegal Character <"+yytext()+">"); }
+						{ return cf.newSymbol("", sym._SYMB_3, left_loc(), right_loc()); }
 					case -5:
 						break;
 					case 5:
-						{ return cf.newSymbol("", sym._SYMB_3, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_4, left_loc(), right_loc()); }
 					case -6:
 						break;
 					case 6:
-						{ return cf.newSymbol("", sym._SYMB_4, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_5, left_loc(), right_loc()); }
 					case -7:
 						break;
 					case 7:
-						{ return cf.newSymbol("", sym._SYMB_5, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_6, left_loc(), right_loc()); }
 					case -8:
 						break;
 					case 8:
-						{ return cf.newSymbol("", sym._SYMB_6, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_8, left_loc(), right_loc()); }
 					case -9:
 						break;
 					case 9:
-						{ return cf.newSymbol("", sym._SYMB_8, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_9, left_loc(), right_loc()); }
 					case -10:
 						break;
 					case 10:
@@ -387,11 +385,11 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -15:
 						break;
 					case 15:
-						{ return cf.newSymbol("", sym._SYMB_17, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_15, left_loc(), right_loc()); }
 					case -16:
 						break;
 					case 16:
-						{ return cf.newSymbol("", sym._SYMB_21, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_18, left_loc(), right_loc()); }
 					case -17:
 						break;
 					case 17:
@@ -399,43 +397,43 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -18:
 						break;
 					case 18:
-						{ return cf.newSymbol("", sym._SYMB_24, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_23, left_loc(), right_loc()); }
 					case -19:
 						break;
 					case 19:
-						{ /* ignore white space. */ }
+						{ return cf.newSymbol("", sym._SYMB_25, left_loc(), right_loc()); }
 					case -20:
 						break;
 					case 20:
-						{ return cf.newSymbol("", sym._SYMB_2, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_26, left_loc(), right_loc()); }
 					case -21:
 						break;
 					case 21:
-						{ return cf.newSymbol("", sym._SYMB_7, left_loc(), right_loc()); }
+						{ /* ignore white space. */ }
 					case -22:
 						break;
 					case 22:
-						{ return cf.newSymbol("", sym._SYMB_15, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_2, left_loc(), right_loc()); }
 					case -23:
 						break;
 					case 23:
-						{ return cf.newSymbol("", sym._SYMB_16, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_7, left_loc(), right_loc()); }
 					case -24:
 						break;
 					case 24:
-						{ return cf.newSymbol("", sym._SYMB_19, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_17, left_loc(), right_loc()); }
 					case -25:
 						break;
 					case 25:
-						{ return cf.newSymbol("", sym._SYMB_20, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_16, left_loc(), right_loc()); }
 					case -26:
 						break;
 					case 26:
-						{ return cf.newSymbol("", sym._SYMB_18, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_20, left_loc(), right_loc()); }
 					case -27:
 						break;
 					case 27:
-						{ return cf.newSymbol("", sym._SYMB_23, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_21, left_loc(), right_loc()); }
 					case -28:
 						break;
 					case 28:
@@ -443,40 +441,48 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -29:
 						break;
 					case 29:
-						{ return cf.newSymbol("", sym._SYMB_0, left_loc(), right_loc()); }
+						{ return cf.newSymbol("", sym._SYMB_19, left_loc(), right_loc()); }
 					case -30:
 						break;
-					case 31:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+					case 30:
+						{ return cf.newSymbol("", sym._SYMB_24, left_loc(), right_loc()); }
 					case -31:
 						break;
-					case 32:
-						{ throw new Error("Illegal Character <"+yytext()+">"); }
+					case 31:
+						{ return cf.newSymbol("", sym._SYMB_0, left_loc(), right_loc()); }
 					case -32:
 						break;
-					case 34:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+					case 33:
+						{ throw new Error("Illegal Character <"+yytext()+">"); }
 					case -33:
 						break;
-					case 35:
-						{ throw new Error("Illegal Character <"+yytext()+">"); }
+					case 34:
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
 					case -34:
 						break;
-					case 37:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+					case 36:
+						{ throw new Error("Illegal Character <"+yytext()+">"); }
 					case -35:
 						break;
-					case 39:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+					case 37:
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
 					case -36:
 						break;
-					case 41:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+					case 39:
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
 					case -37:
 						break;
-					case 43:
-						{ return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
+					case 41:
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
 					case -38:
+						break;
+					case 42:
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
+					case -39:
+						break;
+					case 43:
+						{ return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
+					case -40:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);

@@ -7,12 +7,9 @@ public class ComposVisitor<A> implements
   coop.rchain.rhocomb.pi2rhocomb.Absyn.Req.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.Req,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPProc.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPProc,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPComp.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPComp,A>,
-  coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName,A>,
-  coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYProc.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYProc,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYComb.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYComb,A>,
-  coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName,A>,
-  coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar,A>,
+  coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRProc.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRProc,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRComb.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRComb,A>,
   coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRName.Visitor<coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRName,A>
@@ -54,13 +51,13 @@ public class ComposVisitor<A> implements
       return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPRep(rcpproc_);
     }    public RCPProc visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew p, A arg)
     {
-      ListRCPName listrcpname_ = new ListRCPName();
-      for (RCPName x : p.listrcpname_)
+      ListRCUName listrcuname_ = new ListRCUName();
+      for (RCUName x : p.listrcuname_)
       {
-        listrcpname_.add(x.accept(this,arg));
+        listrcuname_.add(x.accept(this,arg));
       }
       RCPProc rcpproc_ = p.rcpproc_.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew(listrcpname_, rcpproc_);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew(listrcuname_, rcpproc_);
     }
 /* RCPComp */
     public RCPComp visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPZero p, A arg)
@@ -68,33 +65,15 @@ public class ComposVisitor<A> implements
       return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPZero();
     }    public RCPComp visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp p, A arg)
     {
-      RCPName rcpname_1 = p.rcpname_1.accept(this, arg);
-      RCPName rcpname_2 = p.rcpname_2.accept(this, arg);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
       RCPProc rcpproc_ = p.rcpproc_.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp(rcpname_1, rcpname_2, rcpproc_);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp(rcuname_1, rcuname_2, rcpproc_);
     }    public RCPComp visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp p, A arg)
     {
-      RCPName rcpname_1 = p.rcpname_1.accept(this, arg);
-      RCPName rcpname_2 = p.rcpname_2.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp(rcpname_1, rcpname_2);
-    }
-/* RCPName */
-    public RCPName visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild p, A arg)
-    {
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild();
-    }    public RCPName visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar p, A arg)
-    {
-      String var_ = p.var_;
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar(var_);
-    }
-/* RCPVar */
-    public RCPVar visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild p, A arg)
-    {
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild();
-    }    public RCPVar visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar p, A arg)
-    {
-      String var_ = p.var_;
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar(var_);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp(rcuname_1, rcuname_2);
     }
 /* RCYProc */
     public RCYProc visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYPar p, A arg)
@@ -112,13 +91,13 @@ public class ComposVisitor<A> implements
       return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYStr(rcyproc_);
     }    public RCYProc visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew p, A arg)
     {
-      ListRCYName listrcyname_ = new ListRCYName();
-      for (RCYName x : p.listrcyname_)
+      ListRCUName listrcuname_ = new ListRCUName();
+      for (RCUName x : p.listrcuname_)
       {
-        listrcyname_.add(x.accept(this,arg));
+        listrcuname_.add(x.accept(this,arg));
       }
       RCYProc rcyproc_ = p.rcyproc_.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew(listrcyname_, rcyproc_);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew(listrcuname_, rcyproc_);
     }
 /* RCYComb */
     public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYZero p, A arg)
@@ -126,58 +105,49 @@ public class ComposVisitor<A> implements
       return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYZero();
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg p, A arg)
     {
-      RCYName rcyname_1 = p.rcyname_1.accept(this, arg);
-      RCYName rcyname_2 = p.rcyname_2.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg(rcyname_1, rcyname_2);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg(rcuname_1, rcuname_2);
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill p, A arg)
     {
-      RCYName rcyname_ = p.rcyname_.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill(rcyname_);
+      RCUName rcuname_ = p.rcuname_.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill(rcuname_);
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup p, A arg)
     {
-      RCYName rcyname_1 = p.rcyname_1.accept(this, arg);
-      RCYName rcyname_2 = p.rcyname_2.accept(this, arg);
-      RCYName rcyname_3 = p.rcyname_3.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup(rcyname_1, rcyname_2, rcyname_3);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      RCUName rcuname_3 = p.rcuname_3.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup(rcuname_1, rcuname_2, rcuname_3);
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq p, A arg)
     {
-      RCYName rcyname_1 = p.rcyname_1.accept(this, arg);
-      RCYName rcyname_2 = p.rcyname_2.accept(this, arg);
-      RCYName rcyname_3 = p.rcyname_3.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq(rcyname_1, rcyname_2, rcyname_3);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      RCUName rcuname_3 = p.rcuname_3.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq(rcuname_1, rcuname_2, rcuname_3);
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd p, A arg)
     {
-      RCYName rcyname_1 = p.rcyname_1.accept(this, arg);
-      RCYName rcyname_2 = p.rcyname_2.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd(rcyname_1, rcyname_2);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd(rcuname_1, rcuname_2);
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl p, A arg)
     {
-      RCYName rcyname_1 = p.rcyname_1.accept(this, arg);
-      RCYName rcyname_2 = p.rcyname_2.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl(rcyname_1, rcyname_2);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl(rcuname_1, rcuname_2);
     }    public RCYComb visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr p, A arg)
     {
-      RCYName rcyname_1 = p.rcyname_1.accept(this, arg);
-      RCYName rcyname_2 = p.rcyname_2.accept(this, arg);
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr(rcyname_1, rcyname_2);
+      RCUName rcuname_1 = p.rcuname_1.accept(this, arg);
+      RCUName rcuname_2 = p.rcuname_2.accept(this, arg);
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr(rcuname_1, rcuname_2);
     }
-/* RCYName */
-    public RCYName visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild p, A arg)
+/* RCUName */
+    public RCUName visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild p, A arg)
     {
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild();
-    }    public RCYName visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar p, A arg)
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild();
+    }    public RCUName visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar p, A arg)
     {
-      String cvar_ = p.cvar_;
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar(cvar_);
-    }
-/* RCYVar */
-    public RCYVar visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild p, A arg)
-    {
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild();
-    }    public RCYVar visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar p, A arg)
-    {
-      String cvar_ = p.cvar_;
-      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar(cvar_);
+      String var_ = p.var_;
+      return new coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar(var_);
     }
 /* RCRProc */
     public RCRProc visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRPar p, A arg)

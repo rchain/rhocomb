@@ -108,51 +108,6 @@ public class PrettyPrinter
     buf_.delete(0,buf_.length());
     return temp;
   }
-  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName foo)
-  {
-    pp(foo, 0);
-    trim();
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName foo)
-  {
-    sh(foo);
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCPName foo)
-  {
-    pp(foo, 0);
-    trim();
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCPName foo)
-  {
-    sh(foo);
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar foo)
-  {
-    pp(foo, 0);
-    trim();
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar foo)
-  {
-    sh(foo);
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
   public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYProc foo)
   {
     pp(foo, 0);
@@ -183,7 +138,7 @@ public class PrettyPrinter
     buf_.delete(0,buf_.length());
     return temp;
   }
-  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName foo)
+  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName foo)
   {
     pp(foo, 0);
     trim();
@@ -191,14 +146,14 @@ public class PrettyPrinter
     buf_.delete(0,buf_.length());
     return temp;
   }
-  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName foo)
+  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName foo)
   {
     sh(foo);
     String temp = buf_.toString();
     buf_.delete(0,buf_.length());
     return temp;
   }
-  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCYName foo)
+  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCUName foo)
   {
     pp(foo, 0);
     trim();
@@ -206,22 +161,7 @@ public class PrettyPrinter
     buf_.delete(0,buf_.length());
     return temp;
   }
-  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCYName foo)
-  {
-    sh(foo);
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String print(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar foo)
-  {
-    pp(foo, 0);
-    trim();
-    String temp = buf_.toString();
-    buf_.delete(0,buf_.length());
-    return temp;
-  }
-  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar foo)
+  public static String show(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCUName foo)
   {
     sh(foo);
     String temp = buf_.toString();
@@ -281,7 +221,7 @@ public class PrettyPrinter
     {
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RqP2R _rqp2r = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RqP2R) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("!toRho");
+       render(":rho");
        pp(_rqp2r.rcpproc_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -289,7 +229,7 @@ public class PrettyPrinter
     {
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RqY2R _rqy2r = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RqY2R) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("!toRho");
+       render(":rho");
        pp(_rqy2r.rcyproc_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -297,7 +237,7 @@ public class PrettyPrinter
     {
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RqP2Y _rqp2y = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RqP2Y) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("!toCC");
+       render(":cc");
        pp(_rqp2y.rcpproc_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -348,7 +288,7 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew _rcpnew = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew) foo;
        if (_i_ > 1) render(_L_PAREN);
        render("new");
-       pp(_rcpnew.listrcpname_, 0);
+       pp(_rcpnew.listrcuname_, 0);
        render("in");
        pp(_rcpnew.rcpproc_, 1);
        if (_i_ > 1) render(_R_PAREN);
@@ -370,9 +310,9 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("for");
        render("(");
-       pp(_rcpinp.rcpname_1, 0);
+       pp(_rcpinp.rcuname_1, 0);
        render("<-");
-       pp(_rcpinp.rcpname_2, 0);
+       pp(_rcpinp.rcuname_2, 0);
        render(")");
        pp(_rcpinp.rcpproc_, 1);
        if (_i_ > 0) render(_R_PAREN);
@@ -381,59 +321,11 @@ public class PrettyPrinter
     {
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp _rcpoutp = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp) foo;
        if (_i_ > 0) render(_L_PAREN);
-       pp(_rcpoutp.rcpname_1, 0);
+       pp(_rcpoutp.rcuname_1, 0);
        render("!");
        render("(");
-       pp(_rcpoutp.rcpname_2, 0);
+       pp(_rcpoutp.rcuname_2, 0);
        render(")");
-       if (_i_ > 0) render(_R_PAREN);
-    }
-  }
-
-  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName foo, int _i_)
-  {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild _rcpnwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild) foo;
-       if (_i_ > 0) render(_L_PAREN);
-       render("_");
-       if (_i_ > 0) render(_R_PAREN);
-    }
-    else     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar _rcpnvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar) foo;
-       if (_i_ > 0) render(_L_PAREN);
-       pp(_rcpnvar.var_, 0);
-       if (_i_ > 0) render(_R_PAREN);
-    }
-  }
-
-  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCPName foo, int _i_)
-  {
-     for (java.util.Iterator<RCPName> it = foo.iterator(); it.hasNext();)
-     {
-       pp(it.next(), _i_);
-       if (it.hasNext()) {
-         render(",");
-       } else {
-         render("");
-       }
-     }  }
-
-  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar foo, int _i_)
-  {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild _rcppwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild) foo;
-       if (_i_ > 0) render(_L_PAREN);
-       render("_");
-       if (_i_ > 0) render(_R_PAREN);
-    }
-    else     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar _rcppvvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar) foo;
-       if (_i_ > 0) render(_L_PAREN);
-       pp(_rcppvvar.var_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
   }
@@ -469,7 +361,7 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew _rcynew = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew) foo;
        if (_i_ > 1) render(_L_PAREN);
        render("new");
-       pp(_rcynew.listrcyname_, 0);
+       pp(_rcynew.listrcuname_, 0);
        render("in");
        pp(_rcynew.rcyproc_, 1);
        if (_i_ > 1) render(_R_PAREN);
@@ -482,7 +374,7 @@ public class PrettyPrinter
     {
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYZero _rcyzero = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYZero) foo;
        if (_i_ > 0) render(_L_PAREN);
-       render("0");
+       render("z");
        if (_i_ > 0) render(_R_PAREN);
     }
     else     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg)
@@ -491,9 +383,9 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("m");
        render("(");
-       pp(_rcymsg.rcyname_1, 0);
+       pp(_rcymsg.rcuname_1, 0);
        render(",");
-       pp(_rcymsg.rcyname_2, 0);
+       pp(_rcymsg.rcuname_2, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -503,7 +395,7 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("k");
        render("(");
-       pp(_rcykill.rcyname_, 0);
+       pp(_rcykill.rcuname_, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -513,11 +405,11 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("d");
        render("(");
-       pp(_rcydup.rcyname_1, 0);
+       pp(_rcydup.rcuname_1, 0);
        render(",");
-       pp(_rcydup.rcyname_2, 0);
+       pp(_rcydup.rcuname_2, 0);
        render(",");
-       pp(_rcydup.rcyname_3, 0);
+       pp(_rcydup.rcuname_3, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -527,11 +419,11 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("s");
        render("(");
-       pp(_rcyseq.rcyname_1, 0);
+       pp(_rcyseq.rcuname_1, 0);
        render(",");
-       pp(_rcyseq.rcyname_2, 0);
+       pp(_rcyseq.rcuname_2, 0);
        render(",");
-       pp(_rcyseq.rcyname_3, 0);
+       pp(_rcyseq.rcuname_3, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -541,9 +433,9 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("fw");
        render("(");
-       pp(_rcyfwd.rcyname_1, 0);
+       pp(_rcyfwd.rcuname_1, 0);
        render(",");
-       pp(_rcyfwd.rcyname_2, 0);
+       pp(_rcyfwd.rcuname_2, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -553,9 +445,9 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("bl");
        render("(");
-       pp(_rcybrl.rcyname_1, 0);
+       pp(_rcybrl.rcuname_1, 0);
        render(",");
-       pp(_rcybrl.rcyname_2, 0);
+       pp(_rcybrl.rcuname_2, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
@@ -565,61 +457,43 @@ public class PrettyPrinter
        if (_i_ > 0) render(_L_PAREN);
        render("br");
        render("(");
-       pp(_rcybrr.rcyname_1, 0);
+       pp(_rcybrr.rcuname_1, 0);
        render(",");
-       pp(_rcybrr.rcyname_2, 0);
+       pp(_rcybrr.rcuname_2, 0);
        render(")");
        if (_i_ > 0) render(_R_PAREN);
     }
   }
 
-  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName foo, int _i_)
+  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName foo, int _i_)
   {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild)
+    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild)
     {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild _rcynwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild) foo;
+       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild _rcunwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild) foo;
        if (_i_ > 0) render(_L_PAREN);
        render("_");
        if (_i_ > 0) render(_R_PAREN);
     }
-    else     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar)
+    else     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar)
     {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar _rcynvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar) foo;
+       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar _rcunvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar) foo;
        if (_i_ > 0) render(_L_PAREN);
-       pp(_rcynvar.cvar_, 0);
+       pp(_rcunvar.var_, 0);
        if (_i_ > 0) render(_R_PAREN);
     }
   }
 
-  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCYName foo, int _i_)
+  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCUName foo, int _i_)
   {
-     for (java.util.Iterator<RCYName> it = foo.iterator(); it.hasNext();)
+     for (java.util.Iterator<RCUName> it = foo.iterator(); it.hasNext();)
      {
        pp(it.next(), _i_);
        if (it.hasNext()) {
-         render(",");
+         render(";");
        } else {
          render("");
        }
      }  }
-
-  private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar foo, int _i_)
-  {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild _rcpywild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild) foo;
-       if (_i_ > 0) render(_L_PAREN);
-       render("_");
-       if (_i_ > 0) render(_R_PAREN);
-    }
-    else     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar _rcpyvvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar) foo;
-       if (_i_ > 0) render(_L_PAREN);
-       pp(_rcpyvvar.cvar_, 0);
-       if (_i_ > 0) render(_R_PAREN);
-    }
-  }
 
   private static void pp(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRProc foo, int _i_)
   {
@@ -835,7 +709,7 @@ public class PrettyPrinter
        render("(");
        render("RCPNew");
        render("[");
-       sh(_rcpnew.listrcpname_);
+       sh(_rcpnew.listrcuname_);
        render("]");
        sh(_rcpnew.rcpproc_);
        render(")");
@@ -854,8 +728,8 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp _rcpinp = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp) foo;
        render("(");
        render("RCPInp");
-       sh(_rcpinp.rcpname_1);
-       sh(_rcpinp.rcpname_2);
+       sh(_rcpinp.rcuname_1);
+       sh(_rcpinp.rcuname_2);
        sh(_rcpinp.rcpproc_);
        render(")");
     }
@@ -864,52 +738,8 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp _rcpoutp = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp) foo;
        render("(");
        render("RCPOutp");
-       sh(_rcpoutp.rcpname_1);
-       sh(_rcpoutp.rcpname_2);
-       render(")");
-    }
-  }
-
-  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName foo)
-  {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild _rcpnwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild) foo;
-       render("RCPNWild");
-    }
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar _rcpnvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar) foo;
-       render("(");
-       render("RCPNVar");
-       sh(_rcpnvar.var_);
-       render(")");
-    }
-  }
-
-  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCPName foo)
-  {
-     for (java.util.Iterator<RCPName> it = foo.iterator(); it.hasNext();)
-     {
-       sh(it.next());
-       if (it.hasNext())
-         render(",");
-     }
-  }
-
-  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar foo)
-  {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild _rcppwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild) foo;
-       render("RCPPWild");
-    }
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar _rcppvvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar) foo;
-       render("(");
-       render("RCPPVVar");
-       sh(_rcppvvar.var_);
+       sh(_rcpoutp.rcuname_1);
+       sh(_rcpoutp.rcuname_2);
        render(")");
     }
   }
@@ -947,7 +777,7 @@ public class PrettyPrinter
        render("(");
        render("RCYNew");
        render("[");
-       sh(_rcynew.listrcyname_);
+       sh(_rcynew.listrcuname_);
        render("]");
        sh(_rcynew.rcyproc_);
        render(")");
@@ -966,8 +796,8 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg _rcymsg = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg) foo;
        render("(");
        render("RCYMsg");
-       sh(_rcymsg.rcyname_1);
-       sh(_rcymsg.rcyname_2);
+       sh(_rcymsg.rcuname_1);
+       sh(_rcymsg.rcuname_2);
        render(")");
     }
     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill)
@@ -975,7 +805,7 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill _rcykill = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill) foo;
        render("(");
        render("RCYKill");
-       sh(_rcykill.rcyname_);
+       sh(_rcykill.rcuname_);
        render(")");
     }
     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup)
@@ -983,9 +813,9 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup _rcydup = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup) foo;
        render("(");
        render("RCYDup");
-       sh(_rcydup.rcyname_1);
-       sh(_rcydup.rcyname_2);
-       sh(_rcydup.rcyname_3);
+       sh(_rcydup.rcuname_1);
+       sh(_rcydup.rcuname_2);
+       sh(_rcydup.rcuname_3);
        render(")");
     }
     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq)
@@ -993,9 +823,9 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq _rcyseq = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq) foo;
        render("(");
        render("RCYSeq");
-       sh(_rcyseq.rcyname_1);
-       sh(_rcyseq.rcyname_2);
-       sh(_rcyseq.rcyname_3);
+       sh(_rcyseq.rcuname_1);
+       sh(_rcyseq.rcuname_2);
+       sh(_rcyseq.rcuname_3);
        render(")");
     }
     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd)
@@ -1003,8 +833,8 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd _rcyfwd = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd) foo;
        render("(");
        render("RCYFwd");
-       sh(_rcyfwd.rcyname_1);
-       sh(_rcyfwd.rcyname_2);
+       sh(_rcyfwd.rcuname_1);
+       sh(_rcyfwd.rcuname_2);
        render(")");
     }
     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl)
@@ -1012,8 +842,8 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl _rcybrl = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl) foo;
        render("(");
        render("RCYBrl");
-       sh(_rcybrl.rcyname_1);
-       sh(_rcybrl.rcyname_2);
+       sh(_rcybrl.rcuname_1);
+       sh(_rcybrl.rcuname_2);
        render(")");
     }
     if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr)
@@ -1021,54 +851,37 @@ public class PrettyPrinter
        coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr _rcybrr = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr) foo;
        render("(");
        render("RCYBrr");
-       sh(_rcybrr.rcyname_1);
-       sh(_rcybrr.rcyname_2);
+       sh(_rcybrr.rcuname_1);
+       sh(_rcybrr.rcuname_2);
        render(")");
     }
   }
 
-  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName foo)
+  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName foo)
   {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild)
+    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild)
     {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild _rcynwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild) foo;
-       render("RCYNWild");
+       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild _rcunwild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild) foo;
+       render("RCUNWild");
     }
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar)
+    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar)
     {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar _rcynvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar) foo;
+       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar _rcunvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar) foo;
        render("(");
-       render("RCYNVar");
-       sh(_rcynvar.cvar_);
+       render("RCUNVar");
+       sh(_rcunvar.var_);
        render(")");
     }
   }
 
-  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCYName foo)
+  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.ListRCUName foo)
   {
-     for (java.util.Iterator<RCYName> it = foo.iterator(); it.hasNext();)
+     for (java.util.Iterator<RCUName> it = foo.iterator(); it.hasNext();)
      {
        sh(it.next());
        if (it.hasNext())
          render(",");
      }
-  }
-
-  private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar foo)
-  {
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild _rcpywild = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild) foo;
-       render("RCPYWild");
-    }
-    if (foo instanceof coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar)
-    {
-       coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar _rcpyvvar = (coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar) foo;
-       render("(");
-       render("RCPYVVar");
-       sh(_rcpyvvar.cvar_);
-       render(")");
-    }
   }
 
   private static void sh(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCRProc foo)

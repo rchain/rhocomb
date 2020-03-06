@@ -1,6 +1,6 @@
-RqP2R    . Req      ::= "!toRho" RCPProc ;
-RqY2R    . Req      ::= "!toRho" RCYProc ;
-RqP2Y    . Req      ::= "!toCC" RCPProc ;
+RqP2R    . Req      ::= ":rho" RCPProc ;
+RqY2R    . Req      ::= ":rho" RCYProc ;
+RqP2Y    . Req      ::= ":cc" RCPProc ;
 
 RqEval   . Req      ::= RCRProc ;
 RqCmd    . Req      ::= ":q" ;
@@ -8,49 +8,36 @@ RqCmd    . Req      ::= ":q" ;
 _        . RCPProc  ::= RCPProc1 ;
 _        . RCPProc1 ::= "{" RCPProc "}" ;
 RCPZero  . RCPComp  ::= "0" ;
-RCPInp   . RCPComp  ::= "for" "(" RCPName "<-" RCPName ")" RCPProc1 ;
-RCPOutp  . RCPComp  ::= RCPName "!" "(" RCPName ")" ;
+RCPInp   . RCPComp  ::= "for" "(" RCUName "<-" RCUName ")" RCPProc1 ;
+RCPOutp  . RCPComp  ::= RCUName "!" "(" RCUName ")" ;
 
 RCPInj   . RCPProc1 ::= RCPComp ;
 RCPRep   . RCPProc1 ::= "*" RCPProc1 ;
-RCPNew   . RCPProc1 ::= "new" [RCPName] "in" RCPProc1 ;
+RCPNew   . RCPProc1 ::= "new" [RCUName] "in" RCPProc1 ;
 
 RCPPar   . RCPProc  ::= RCPProc "|" RCPProc1 ;
 
--- Names
-RCPNWild . RCPName  ::= "_" ;
-RCPNVar  . RCPName  ::= Var ;
-separator RCPName "," ;
-
--- Process variables
-RCPPWild . RCPVar   ::= "_" ;
-RCPPVVar . RCPVar   ::= Var ;
-
 _        . RCYProc  ::= RCYProc1 ;
 _        . RCYProc1 ::= "{" RCYProc "}" ;
-RCYZero  . RCYComb  ::= "0" ;
-RCYMsg   . RCYComb  ::= "m" "(" RCYName "," RCYName ")" ;
-RCYKill  . RCYComb  ::= "k" "(" RCYName ")" ;
-RCYDup   . RCYComb  ::= "d" "(" RCYName "," RCYName "," RCYName ")" ;
-RCYSeq   . RCYComb  ::= "s" "(" RCYName "," RCYName "," RCYName ")" ;
-RCYFwd   . RCYComb  ::= "fw" "(" RCYName "," RCYName ")" ;
-RCYBrl   . RCYComb  ::= "bl" "(" RCYName "," RCYName ")" ;
-RCYBrr   . RCYComb  ::= "br" "(" RCYName "," RCYName ")" ;
+RCYZero  . RCYComb  ::= "z" ;
+RCYMsg   . RCYComb  ::= "m" "(" RCUName "," RCUName ")" ;
+RCYKill  . RCYComb  ::= "k" "(" RCUName ")" ;
+RCYDup   . RCYComb  ::= "d" "(" RCUName "," RCUName "," RCUName ")" ;
+RCYSeq   . RCYComb  ::= "s" "(" RCUName "," RCUName "," RCUName ")" ;
+RCYFwd   . RCYComb  ::= "fw" "(" RCUName "," RCUName ")" ;
+RCYBrl   . RCYComb  ::= "bl" "(" RCUName "," RCUName ")" ;
+RCYBrr   . RCYComb  ::= "br" "(" RCUName "," RCUName ")" ;
 
 RCYInj   . RCYProc1 ::= RCYComb ;
 RCYStr   . RCYProc1 ::= "*" RCYProc1 ;
-RCYNew   . RCYProc1 ::= "new" [RCYName] "in" RCYProc1 ;
+RCYNew   . RCYProc1 ::= "new" [RCUName] "in" RCYProc1 ;
 
 RCYPar   . RCYProc  ::= RCYProc "|" RCYProc1 ;
 
 -- Names
-RCYNWild . RCYName  ::= "_" ;
-RCYNVar  . RCYName  ::= CVar ;
-separator RCYName "," ;
-
--- Process variables
-RCPYWild . RCYVar   ::= "_" ;
-RCPYVVar . RCYVar   ::= CVar ;
+RCUNWild . RCUName  ::= "_" ;
+RCUNVar  . RCUName  ::= Var ;
+separator RCUName ";" ;
 
 _        . RCRProc  ::= RCRProc1 ;
 _        . RCRProc1 ::= "{" RCRProc "}" ;
@@ -68,7 +55,5 @@ RCRStr   . RCRProc1 ::= "*" "(" RCRName ")" ;
 RCRPar   . RCRProc  ::= RCRProc "|" RCRProc1 ;
 
 RCRQuot  . RCRName  ::= "@" RCRProc ;
-
-token CVar (((letter | '\'') (letter | digit | '_' | '\'')*)|(('_') (letter | digit | '_' | '\'')+)) ;
 
 token Var (((letter | '\'') (letter | digit | '_' | '\'')*)|(('_') (letter | digit | '_' | '\'')+)) ;

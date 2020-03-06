@@ -28,8 +28,8 @@ object Optimiser {
   def normalizeRCPComponent( ast : RCPComp ) : RCPCompExp = {
     ast match {
       case rcpz    : RCPZero => RCPZeroExp
-      case rcpinp  : RCPInp  => RCPInpExp ( normalizeRCPName( rcpinp.rcpname_1 ), normalizeRCPName( rcpinp.rcpname_2 ), normalizeRCPProcess( rcpinp.rcpproc_ ) )
-      case rcpoutp : RCPOutp => RCPOutpExp ( normalizeRCPName( rcpoutp.rcpname_1 ), normalizeRCPName( rcpoutp.rcpname_2 ) )
+      case rcpinp  : RCPInp  => RCPInpExp ( normalizeRCUName( rcpinp.rcuname_1 ), normalizeRCUName( rcpinp.rcuname_2 ), normalizeRCPProcess( rcpinp.rcpproc_ ) )
+      case rcpoutp : RCPOutp => RCPOutpExp ( normalizeRCUName( rcpoutp.rcuname_1 ), normalizeRCUName( rcpoutp.rcuname_2 ) )
       case _            => throw new Exception( s"unexpected ast: ${ast}" )
     }
   }
@@ -39,18 +39,18 @@ object Optimiser {
       case rcpinj : RCPInj  => normalizeRCPComponent( rcpinj.rcpcomp_ )
       case rcprep : RCPRep  => RCPRepExp( normalizeRCPProcess( rcprep.rcpproc_ ) )
       case rcpnew : RCPNew  => {
-        val nlist = rcpnew.listrcpname_.asScala.toList
-        RCPNewExp( nlist.map( normalizeRCPName ), normalizeRCPProcess( rcpnew.rcpproc_ ) )
+        val nlist = rcpnew.listrcuname_.asScala.toList
+        RCPNewExp( nlist.map( normalizeRCUName ), normalizeRCPProcess( rcpnew.rcpproc_ ) )
       }
       case rcppar : RCPPar  => RCPParExp( normalizeRCPProcess( rcppar.rcpproc_1 ), normalizeRCPProcess( rcppar.rcpproc_2 ) )
       case _            => throw new Exception( s"unexpected ast: ${ast}" )
     }
   }
 
-  def normalizeRCPName( ast : RCPName ) : RCPNameExp = {
+  def normalizeRCUName( ast : RCUName ) : RCUNameExp = {
     ast match {
-      case rcpnwild : RCPNWild => RCPWildExp
-      case rcpnvar  : RCPNVar  => RCPVarExp( rcpnvar.var_ )
+      case rcunwild : RCUNWild => RCUWildExp
+      case rcunvar  : RCUNVar  => RCUVarExp( rcunvar.var_ )
       case _          => throw new Exception( s"unexpected ast: ${ast}" )
     }
   }
@@ -62,13 +62,13 @@ object Optimiser {
   def normalizeRCYCombinator( ast : RCYComb ) : RCYCombExp = {
     ast match {
       case rz   : RCYZero => RCYZeroExp
-      case rm   : RCYMsg  => RCYMsgExp ( normalizeRCYName( rm.rcyname_1 ), normalizeRCYName( rm.rcyname_2 ) )
-      case rd   : RCYDup  => RCYDupExp ( normalizeRCYName( rd.rcyname_1 ), normalizeRCYName( rd.rcyname_2 ), normalizeRCYName( rd.rcyname_3 ) )
-      case rk   : RCYKill => RCYKillExp( normalizeRCYName( rk.rcyname_ ) )
-      case rfw  : RCYFwd  => RCYFwdExp ( normalizeRCYName( rfw.rcyname_1 ), normalizeRCYName( rfw.rcyname_2 ) )
-      case rbl  : RCYBrl  => RCYBrlExp ( normalizeRCYName( rbl.rcyname_1 ), normalizeRCYName( rbl.rcyname_2 ) )
-      case rbr  : RCYBrr  => RCYBrrExp ( normalizeRCYName( rbr.rcyname_1 ), normalizeRCYName( rbr.rcyname_2 ) )
-      case rs   : RCYSeq  => RCYSeqExp ( normalizeRCYName( rs.rcyname_1 ), normalizeRCYName( rs.rcyname_2 ), normalizeRCYName( rs.rcyname_3 ) )
+      case rm   : RCYMsg  => RCYMsgExp ( normalizeRCUName( rm.rcuname_1 ), normalizeRCUName( rm.rcuname_2 ) )
+      case rd   : RCYDup  => RCYDupExp ( normalizeRCUName( rd.rcuname_1 ), normalizeRCUName( rd.rcuname_2 ), normalizeRCUName( rd.rcuname_3 ) )
+      case rk   : RCYKill => RCYKillExp( normalizeRCUName( rk.rcuname_ ) )
+      case rfw  : RCYFwd  => RCYFwdExp ( normalizeRCUName( rfw.rcuname_1 ), normalizeRCUName( rfw.rcuname_2 ) )
+      case rbl  : RCYBrl  => RCYBrlExp ( normalizeRCUName( rbl.rcuname_1 ), normalizeRCUName( rbl.rcuname_2 ) )
+      case rbr  : RCYBrr  => RCYBrrExp ( normalizeRCUName( rbr.rcuname_1 ), normalizeRCUName( rbr.rcuname_2 ) )
+      case rs   : RCYSeq  => RCYSeqExp ( normalizeRCUName( rs.rcuname_1 ), normalizeRCUName( rs.rcuname_2 ), normalizeRCUName( rs.rcuname_3 ) )
       case _            => throw new Exception( s"unexpected ast: ${ast}" )
     }
   }
@@ -78,19 +78,11 @@ object Optimiser {
       case rcyinj : RCYInj  => normalizeRCYCombinator( rcyinj.rcycomb_ )
       case rcystr : RCYStr  => RCYStrExp( normalizeRCYProcess( rcystr.rcyproc_ ) )
       case rcynew : RCYNew  => {
-        val nlist = rcynew.listrcyname_.asScala.toList
-        RCYNewExp( nlist.map( normalizeRCYName ), normalizeRCYProcess( rcynew.rcyproc_ ) )
+        val nlist = rcynew.listrcuname_.asScala.toList
+        RCYNewExp( nlist.map( normalizeRCUName ), normalizeRCYProcess( rcynew.rcyproc_ ) )
       }
       case rcypar : RCYPar  => RCYParExp( normalizeRCYProcess( rcypar.rcyproc_1 ), normalizeRCYProcess( rcypar.rcyproc_2 ) )
       case _            => throw new Exception( s"unexpected ast: ${ast}" )
-    }
-  }
-
-  def normalizeRCYName( ast : RCYName ) : RCYNameExp = {
-    ast match {
-      case rcynwild : RCYNWild => RCYWildExp
-      case rcynvar  : RCYNVar  => RCYVarExp( rcynvar.cvar_ )
-      case _          => throw new Exception( s"unexpected ast: ${ast}" )
     }
   }
 

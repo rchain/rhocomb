@@ -19,17 +19,17 @@ object PrettyPrinter extends org.bitbucket.inkytonik.kiama.output.PrettyPrinter 
       case Add (l, r)            => showbin (l, "+", r)
       case Mul (l, r)            => showbin (l, "*", r)
       case RCPZeroExp            => "0"
-      case RCPInpExp( x, y, p )  => "for" <+> "(" <+> showRCPName( y ) <+> "<-" <+> showRCPName( x ) <+> showRCPProc( p ) <+> ")"
-      case RCPOutpExp( x, y )    => showRCPName( x ) <+> "!" <+> "(" <+> showRCPName( y ) <+> ")"
+      case RCPInpExp( x, y, p )  => "for" <+> "(" <+> showRCUName( y ) <+> "<-" <+> showRCUName( x ) <+> showRCPProc( p ) <+> ")"
+      case RCPOutpExp( x, y )    => showRCUName( x ) <+> "!" <+> "(" <+> showRCUName( y ) <+> ")"
       
       case RCYZeroExp            => "0"
-      case RCYMsgExp( a, p )     => "m" <+> "(" <+> showRCYName( a ) <+> "," <+> showRCYName( p ) <+> ")"
-      case RCYDupExp( a, b, c )  => "d" <+> "(" <+> showRCYName( a ) <+> "," <+> showRCYName( b ) <+> "," <+> showRCYName( c ) <+> ")"
-      case RCYKillExp( a )       => "k" <+> "(" <+> showRCYName( a ) <+> ")"
-      case RCYFwdExp( a, b )     => "fw" <+> "(" <+> showRCYName( a ) <+> "," <+> showRCYName( b ) <+> ")"
-      case RCYBrlExp( a, b )     => "bl" <+> "(" <+> showRCYName( a ) <+> "," <+> showRCYName( b ) <+> ")"
-      case RCYBrrExp( a, b )     => "br" <+> "(" <+> showRCYName( a ) <+> "," <+> showRCYName( b ) <+> ")"
-      case RCYSeqExp( a, b, c )  => "s" <+> "(" <+> showRCYName( a ) <+> "," <+> showRCYName( b ) <+> "," <+> showRCYName( c ) <+> ")"
+      case RCYMsgExp( a, p )     => "m" <+> "(" <+> showRCUName( a ) <+> "," <+> showRCUName( p ) <+> ")"
+      case RCYDupExp( a, b, c )  => "d" <+> "(" <+> showRCUName( a ) <+> "," <+> showRCUName( b ) <+> "," <+> showRCUName( c ) <+> ")"
+      case RCYKillExp( a )       => "k" <+> "(" <+> showRCUName( a ) <+> ")"
+      case RCYFwdExp( a, b )     => "fw" <+> "(" <+> showRCUName( a ) <+> "," <+> showRCUName( b ) <+> ")"
+      case RCYBrlExp( a, b )     => "bl" <+> "(" <+> showRCUName( a ) <+> "," <+> showRCUName( b ) <+> ")"
+      case RCYBrrExp( a, b )     => "br" <+> "(" <+> showRCUName( a ) <+> "," <+> showRCUName( b ) <+> ")"
+      case RCYSeqExp( a, b, c )  => "s" <+> "(" <+> showRCUName( a ) <+> "," <+> showRCUName( b ) <+> "," <+> showRCUName( c ) <+> ")"
 
       case RCRZeroExp            => "0"
       case RCRMsgExp( a, p )     => "m" <+> "(" <+> showRCRName( a ) <+> "," <+> showRCRName( p ) <+> ")"
@@ -48,48 +48,32 @@ object PrettyPrinter extends org.bitbucket.inkytonik.kiama.output.PrettyPrinter 
   def showRCPProc( rcpproc : RCPProcExp ) : Doc = {
     rcpproc match {
       case RCPRepExp( p )        => "*" <+> showRCPProc( p )
-      case RCPNewExp( ns, p )    => "new" <+> showRCPNames( ns ) <+> "in" <+> showRCPProc( p )
+      case RCPNewExp( ns, p )    => "new" <+> showRCUNames( ns ) <+> "in" <+> showRCPProc( p )
       case RCPParExp( l, r )     => showRCPProc( l ) <+> "|" <+> showRCPProc( r )
     }
   }
 
-  def showRCPName( rcpname : RCPNameExp ) : Doc = {
+  def showRCUName( rcpname : RCUNameExp ) : Doc = {
     rcpname match {
-      case RCPWildExp            => "_"
-      case RCPVarExp( id )       => id
+      case RCUWildExp            => "_"
+      case RCUVarExp( id )       => id
       case _ => "???"
     }
   }
 
-  def showRCPNames( rcpns : List[RCPNameExp] ) : Doc = {
+  def showRCUNames( rcpns : List[RCUNameExp] ) : Doc = {
     rcpns match {
       case Nil                   => ""
-      case rcpname :: Nil        => showRCPName( rcpname )
-      case rcpname :: rrcpns     => showRCPName( rcpname ) <+> "," <+> showRCPNames( rrcpns )
+      case rcpname :: Nil        => showRCUName( rcpname )
+      case rcpname :: rrcpns     => showRCUName( rcpname ) <+> "," <+> showRCUNames( rrcpns )
     }
   }
 
   def showRCYProc( rcyproc : RCYProcExp ) : Doc = {
     rcyproc match {
       case RCYStrExp( p )        => "*" <+> showRCYProc( p )
-      case RCYNewExp( ns, p )    => "new" <+> showRCYNames( ns ) <+> "in" <+> showRCYProc( p )
+      case RCYNewExp( ns, p )    => "new" <+> showRCUNames( ns ) <+> "in" <+> showRCYProc( p )
       case RCYParExp( l, r )     => showRCYProc( l ) <+> "|" <+> showRCYProc( r )
-    }
-  }
-
-  def showRCYName( rcyname : RCYNameExp ) : Doc = {
-    rcyname match {
-      case RCYWildExp            => "_"
-      case RCYVarExp( id )       => id
-      case _ => "???"
-    }
-  }
-
-  def showRCYNames( rcyns : List[RCYNameExp] ) : Doc = {
-    rcyns match {
-      case Nil                   => ""
-      case rcyname :: Nil        => showRCYName( rcyname )
-      case rcyname :: rrcyns     => showRCYName( rcyname ) <+> "," <+> showRCYNames( rrcyns )
     }
   }
   

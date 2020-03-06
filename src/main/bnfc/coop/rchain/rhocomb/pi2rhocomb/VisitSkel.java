@@ -49,7 +49,7 @@ public class VisitSkel
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew p, A arg)
     { /* Code For RCPNew Goes Here */
-      for (RCPName x: p.listrcpname_)
+      for (RCUName x: p.listrcuname_)
       { /* ... */ }
       p.rcpproc_.accept(new RCPProcVisitor<R,A>(), arg);
       return null;
@@ -62,36 +62,14 @@ public class VisitSkel
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp p, A arg)
     { /* Code For RCPInp Goes Here */
-      p.rcpname_1.accept(new RCPNameVisitor<R,A>(), arg);
-      p.rcpname_2.accept(new RCPNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
       p.rcpproc_.accept(new RCPProcVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp p, A arg)
     { /* Code For RCPOutp Goes Here */
-      p.rcpname_1.accept(new RCPNameVisitor<R,A>(), arg);
-      p.rcpname_2.accept(new RCPNameVisitor<R,A>(), arg);
-      return null;
-    }
-  }
-  public class RCPNameVisitor<R,A> implements RCPName.Visitor<R,A>
-  {
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild p, A arg)
-    { /* Code For RCPNWild Goes Here */
-      return null;
-    }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar p, A arg)
-    { /* Code For RCPNVar Goes Here */
-      //p.var_;
-      return null;
-    }
-  }
-  public class RCPVarVisitor<R,A> implements RCPVar.Visitor<R,A>
-  {
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild p, A arg)
-    { /* Code For RCPPWild Goes Here */
-      return null;
-    }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar p, A arg)
-    { /* Code For RCPPVVar Goes Here */
-      //p.var_;
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }
   }
@@ -112,7 +90,7 @@ public class VisitSkel
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew p, A arg)
     { /* Code For RCYNew Goes Here */
-      for (RCYName x: p.listrcyname_)
+      for (RCUName x: p.listrcuname_)
       { /* ... */ }
       p.rcyproc_.accept(new RCYProcVisitor<R,A>(), arg);
       return null;
@@ -125,61 +103,50 @@ public class VisitSkel
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg p, A arg)
     { /* Code For RCYMsg Goes Here */
-      p.rcyname_1.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_2.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill p, A arg)
     { /* Code For RCYKill Goes Here */
-      p.rcyname_.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup p, A arg)
     { /* Code For RCYDup Goes Here */
-      p.rcyname_1.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_2.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_3.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_3.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq p, A arg)
     { /* Code For RCYSeq Goes Here */
-      p.rcyname_1.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_2.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_3.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_3.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd p, A arg)
     { /* Code For RCYFwd Goes Here */
-      p.rcyname_1.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_2.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl p, A arg)
     { /* Code For RCYBrl Goes Here */
-      p.rcyname_1.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_2.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr p, A arg)
     { /* Code For RCYBrr Goes Here */
-      p.rcyname_1.accept(new RCYNameVisitor<R,A>(), arg);
-      p.rcyname_2.accept(new RCYNameVisitor<R,A>(), arg);
+      p.rcuname_1.accept(new RCUNameVisitor<R,A>(), arg);
+      p.rcuname_2.accept(new RCUNameVisitor<R,A>(), arg);
       return null;
     }
   }
-  public class RCYNameVisitor<R,A> implements RCYName.Visitor<R,A>
+  public class RCUNameVisitor<R,A> implements RCUName.Visitor<R,A>
   {
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild p, A arg)
-    { /* Code For RCYNWild Goes Here */
+    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild p, A arg)
+    { /* Code For RCUNWild Goes Here */
       return null;
-    }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar p, A arg)
-    { /* Code For RCYNVar Goes Here */
-      //p.cvar_;
-      return null;
-    }
-  }
-  public class RCYVarVisitor<R,A> implements RCYVar.Visitor<R,A>
-  {
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild p, A arg)
-    { /* Code For RCPYWild Goes Here */
-      return null;
-    }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar p, A arg)
-    { /* Code For RCPYVVar Goes Here */
-      //p.cvar_;
+    }    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar p, A arg)
+    { /* Code For RCUNVar Goes Here */
+      //p.var_;
       return null;
     }
   }

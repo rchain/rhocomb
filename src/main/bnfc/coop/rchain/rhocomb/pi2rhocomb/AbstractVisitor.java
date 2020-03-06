@@ -28,18 +28,6 @@ public class AbstractVisitor<R,A> implements AllVisitor<R,A> {
     public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPComp p, A arg) {
       throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
     }
-/* RCPName */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild p, A arg) { return visitDefault(p, arg); }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar p, A arg) { return visitDefault(p, arg); }
-    public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPName p, A arg) {
-      throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
-    }
-/* RCPVar */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild p, A arg) { return visitDefault(p, arg); }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar p, A arg) { return visitDefault(p, arg); }
-    public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPVar p, A arg) {
-      throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
-    }
 /* RCYProc */
 
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYPar p, A arg) { return visitDefault(p, arg); }
@@ -62,16 +50,10 @@ public class AbstractVisitor<R,A> implements AllVisitor<R,A> {
     public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYComb p, A arg) {
       throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
     }
-/* RCYName */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild p, A arg) { return visitDefault(p, arg); }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar p, A arg) { return visitDefault(p, arg); }
-    public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYName p, A arg) {
-      throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
-    }
-/* RCYVar */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild p, A arg) { return visitDefault(p, arg); }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar p, A arg) { return visitDefault(p, arg); }
-    public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYVar p, A arg) {
+/* RCUName */
+    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild p, A arg) { return visitDefault(p, arg); }
+    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar p, A arg) { return visitDefault(p, arg); }
+    public R visitDefault(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUName p, A arg) {
       throw new IllegalArgumentException(this.getClass().getName() + ": " + p);
     }
 /* RCRProc */

@@ -55,7 +55,7 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNew p, A arg) {
       R r = leaf(arg);
-      for (RCPName x : p.listrcpname_)
+      for (RCUName x : p.listrcuname_)
       {
         r = combine(x.accept(this, arg), r, arg);
       }
@@ -70,35 +70,15 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPInp p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcpname_1.accept(this, arg), r, arg);
-      r = combine(p.rcpname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
       r = combine(p.rcpproc_.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPOutp p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcpname_1.accept(this, arg), r, arg);
-      r = combine(p.rcpname_2.accept(this, arg), r, arg);
-      return r;
-    }
-
-/* RCPName */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNWild p, A arg) {
-      R r = leaf(arg);
-      return r;
-    }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPNVar p, A arg) {
-      R r = leaf(arg);
-      return r;
-    }
-
-/* RCPVar */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPWild p, A arg) {
-      R r = leaf(arg);
-      return r;
-    }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPPVVar p, A arg) {
-      R r = leaf(arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
       return r;
     }
 
@@ -121,7 +101,7 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNew p, A arg) {
       R r = leaf(arg);
-      for (RCYName x : p.listrcyname_)
+      for (RCUName x : p.listrcuname_)
       {
         r = combine(x.accept(this, arg), r, arg);
       }
@@ -136,64 +116,54 @@ public abstract class FoldVisitor<R,A> implements AllVisitor<R,A> {
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYMsg p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_1.accept(this, arg), r, arg);
-      r = combine(p.rcyname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYKill p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_.accept(this, arg), r, arg);
+      r = combine(p.rcuname_.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYDup p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_1.accept(this, arg), r, arg);
-      r = combine(p.rcyname_2.accept(this, arg), r, arg);
-      r = combine(p.rcyname_3.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_3.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYSeq p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_1.accept(this, arg), r, arg);
-      r = combine(p.rcyname_2.accept(this, arg), r, arg);
-      r = combine(p.rcyname_3.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_3.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYFwd p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_1.accept(this, arg), r, arg);
-      r = combine(p.rcyname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrl p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_1.accept(this, arg), r, arg);
-      r = combine(p.rcyname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
       return r;
     }
     public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYBrr p, A arg) {
       R r = leaf(arg);
-      r = combine(p.rcyname_1.accept(this, arg), r, arg);
-      r = combine(p.rcyname_2.accept(this, arg), r, arg);
+      r = combine(p.rcuname_1.accept(this, arg), r, arg);
+      r = combine(p.rcuname_2.accept(this, arg), r, arg);
       return r;
     }
 
-/* RCYName */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNWild p, A arg) {
+/* RCUName */
+    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNWild p, A arg) {
       R r = leaf(arg);
       return r;
     }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCYNVar p, A arg) {
-      R r = leaf(arg);
-      return r;
-    }
-
-/* RCYVar */
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYWild p, A arg) {
-      R r = leaf(arg);
-      return r;
-    }
-    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCPYVVar p, A arg) {
+    public R visit(coop.rchain.rhocomb.pi2rhocomb.Absyn.RCUNVar p, A arg) {
       R r = leaf(arg);
       return r;
     }

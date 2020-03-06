@@ -41,8 +41,8 @@ IDENT = ({LETTER}|{DIGIT}|['_])
 %state STRING
 %state ESCAPED
 %%
-<YYINITIAL>!toRho { return cf.newSymbol("", sym._SYMB_0, left_loc(), right_loc()); }
-<YYINITIAL>!toCC { return cf.newSymbol("", sym._SYMB_1, left_loc(), right_loc()); }
+<YYINITIAL>:rho { return cf.newSymbol("", sym._SYMB_0, left_loc(), right_loc()); }
+<YYINITIAL>:cc { return cf.newSymbol("", sym._SYMB_1, left_loc(), right_loc()); }
 <YYINITIAL>:q { return cf.newSymbol("", sym._SYMB_2, left_loc(), right_loc()); }
 <YYINITIAL>\{ { return cf.newSymbol("", sym._SYMB_3, left_loc(), right_loc()); }
 <YYINITIAL>\} { return cf.newSymbol("", sym._SYMB_4, left_loc(), right_loc()); }
@@ -53,21 +53,22 @@ IDENT = ({LETTER}|{DIGIT}|['_])
 <YYINITIAL>! { return cf.newSymbol("", sym._SYMB_9, left_loc(), right_loc()); }
 <YYINITIAL>\* { return cf.newSymbol("", sym._SYMB_10, left_loc(), right_loc()); }
 <YYINITIAL>\| { return cf.newSymbol("", sym._SYMB_11, left_loc(), right_loc()); }
-<YYINITIAL>_ { return cf.newSymbol("", sym._SYMB_12, left_loc(), right_loc()); }
-<YYINITIAL>, { return cf.newSymbol("", sym._SYMB_13, left_loc(), right_loc()); }
-<YYINITIAL>@ { return cf.newSymbol("", sym._SYMB_14, left_loc(), right_loc()); }
-<YYINITIAL>bl { return cf.newSymbol("", sym._SYMB_15, left_loc(), right_loc()); }
-<YYINITIAL>br { return cf.newSymbol("", sym._SYMB_16, left_loc(), right_loc()); }
-<YYINITIAL>d { return cf.newSymbol("", sym._SYMB_17, left_loc(), right_loc()); }
-<YYINITIAL>for { return cf.newSymbol("", sym._SYMB_18, left_loc(), right_loc()); }
-<YYINITIAL>fw { return cf.newSymbol("", sym._SYMB_19, left_loc(), right_loc()); }
-<YYINITIAL>in { return cf.newSymbol("", sym._SYMB_20, left_loc(), right_loc()); }
-<YYINITIAL>k { return cf.newSymbol("", sym._SYMB_21, left_loc(), right_loc()); }
-<YYINITIAL>m { return cf.newSymbol("", sym._SYMB_22, left_loc(), right_loc()); }
-<YYINITIAL>new { return cf.newSymbol("", sym._SYMB_23, left_loc(), right_loc()); }
-<YYINITIAL>s { return cf.newSymbol("", sym._SYMB_24, left_loc(), right_loc()); }
+<YYINITIAL>, { return cf.newSymbol("", sym._SYMB_12, left_loc(), right_loc()); }
+<YYINITIAL>_ { return cf.newSymbol("", sym._SYMB_13, left_loc(), right_loc()); }
+<YYINITIAL>; { return cf.newSymbol("", sym._SYMB_14, left_loc(), right_loc()); }
+<YYINITIAL>@ { return cf.newSymbol("", sym._SYMB_15, left_loc(), right_loc()); }
+<YYINITIAL>bl { return cf.newSymbol("", sym._SYMB_16, left_loc(), right_loc()); }
+<YYINITIAL>br { return cf.newSymbol("", sym._SYMB_17, left_loc(), right_loc()); }
+<YYINITIAL>d { return cf.newSymbol("", sym._SYMB_18, left_loc(), right_loc()); }
+<YYINITIAL>for { return cf.newSymbol("", sym._SYMB_19, left_loc(), right_loc()); }
+<YYINITIAL>fw { return cf.newSymbol("", sym._SYMB_20, left_loc(), right_loc()); }
+<YYINITIAL>in { return cf.newSymbol("", sym._SYMB_21, left_loc(), right_loc()); }
+<YYINITIAL>k { return cf.newSymbol("", sym._SYMB_22, left_loc(), right_loc()); }
+<YYINITIAL>m { return cf.newSymbol("", sym._SYMB_23, left_loc(), right_loc()); }
+<YYINITIAL>new { return cf.newSymbol("", sym._SYMB_24, left_loc(), right_loc()); }
+<YYINITIAL>s { return cf.newSymbol("", sym._SYMB_25, left_loc(), right_loc()); }
+<YYINITIAL>z { return cf.newSymbol("", sym._SYMB_26, left_loc(), right_loc()); }
 
-<YYINITIAL>({LETTER}|')({LETTER}|{DIGIT}|_|')*|_({LETTER}|{DIGIT}|_|')+ { return cf.newSymbol("", sym.CVar, left_loc(), right_loc(), yytext().intern()); }
 <YYINITIAL>({LETTER}|')({LETTER}|{DIGIT}|_|')*|_({LETTER}|{DIGIT}|_|')+ { return cf.newSymbol("", sym.Var, left_loc(), right_loc(), yytext().intern()); }
 
 
