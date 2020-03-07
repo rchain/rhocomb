@@ -172,13 +172,89 @@ object Evaluator extends Attribution {
         }
       }
       case RCYFwdExp( a, b )    => {
-        RCYZeroExp
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCUNameUtil.fresh()
+            RCYNewExp( 
+              List[RCUNameExp]( c ), 
+              RCYParExp( RCYSeqExp( s, a, c ), RCYFwdExp( c, b ) ) 
+            )
+          }
+          case ( true, false )  => {
+            RCYBrlExp( s, b )
+          }
+          case ( false, true )  => {
+            RCYBrrExp( s, b )
+          }        
+          case ( true, true )   => {
+            val c = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( o, c ), RCYFwdExp( c, b ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
       }
       case RCYBrlExp( a, b )    => {
-        RCYZeroExp
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCUNameUtil.fresh()
+            RCYNewExp( 
+              List[RCUNameExp]( c ), 
+              RCYParExp( RCYSeqExp( s, a, c ), RCYBrlExp( c, b ) ) 
+            )
+          }
+          case ( false, true )  => {
+            val c = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( c, o ), RCYBrlExp( a, c ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( true, _ )  => {
+            val c = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( o, c ), RCYBrlExp( c, b ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
       }
       case RCYBrrExp( a, b )    => {
-        RCYZeroExp
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCUNameUtil.fresh()
+            RCYNewExp( 
+              List[RCUNameExp]( c ), 
+              RCYParExp( RCYSeqExp( s, a, c ), RCYBrrExp( c, b ) ) 
+            )
+          }
+          case ( true, _ )  => {
+            val c = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( o, c ), RCYFwdExp( c, b ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( false, true )  => {
+            val ( c1, c2, c3 ) = ( RCUNameUtil.fresh(), RCUNameUtil.fresh(), RCUNameUtil.fresh() )
+            val q = RCYParExp( RCYSeqExp( c1, o, c3 ), RCYBrrExp( c2, c3 ) )
+            txPiForToY( s, o, RCYParExp( RCYDupExp( a, c1, c2 ), q ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1, c2, c3 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }          
+        }
       }
       case RCYDupExp( a, b, c ) => {
         RCYZeroExp
