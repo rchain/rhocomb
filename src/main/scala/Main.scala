@@ -109,12 +109,13 @@ object Main extends ParsingREPL[RCRhoCombExp] {
         //output.emitln( "trying rproc parse first" )
         val l   = new Yylex( new StringReader( source.content ) )
         val p   = new parser(l, l.getSymbolFactory())
-        //val ast = p.pRProc()
         val ast = p.pReq()
-        //process( source, normalizeProcess( ast ), config )
         val nrq = normalizeRCRequest( ast )
         nrq match {
-          case Quit => None
+          case Quit => {
+            output.emitln( "exiting..." )
+            None
+          }
           case _ => {
             process( source, nrq, config )
             Some( config )
