@@ -40,12 +40,14 @@ object Main extends ParsingREPL[RCRhoCombExp] {
   val parser = parsers.exp
 
   val banner =
-    """Enter expressions using the rho combinators.
+    """Enter expressions using the rho combinators,
           |  e.g., k(@0)|m(@0,@0)
+          |translation requests
+          |  e.g., :rho for( y <- x )0 | new u in x!( u )
           |""".stripMargin
   val lvl : Int = 0
 
-  override def prompt () = "rho> "
+  override def prompt () = "xcomb> "
 
   /**
     * Print the expression as a value, as a tree, pretty printed.
@@ -110,26 +112,37 @@ object Main extends ParsingREPL[RCRhoCombExp] {
         //val ast = p.pRProc()
         val ast = p.pReq()
         //process( source, normalizeProcess( ast ), config )
-        process( source, normalizeRCRequest( ast ), config )
+        val nrq = normalizeRCRequest( ast )
+        nrq match {
+          case Quit => None
+          case _ => {
+            process( source, nrq, config )
+            Some( config )
+          }
+        }
       }
       catch {
         case except : Throwable => {
           //output.emitln( s"${except}" )
           //output.emitln( "failed rproc parse; trying arithmetic parse" )
           parsers.parseAll(parser, source) match {
-            case Success(e, _) =>
+            case Success(e, _) => {
               process(source, e, config)
-            case res : NoSuccess =>
+              Some(config)
+            }
+            case res : NoSuccess => {
               val pos = res.next.position
               positions.setStart(res, pos)
               positions.setFinish(res, pos)
               val messages = message(res, res.message)
               report(messages, config.output())
-          }
+              Some(config)
+            }
+          }          
         }
       }      
     }
-    Some(config)
+    else None
   }
 
 }
