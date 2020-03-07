@@ -297,29 +297,40 @@ object Evaluator extends Attribution {
       case RCYSeqExp( a, b, c ) => {
         ( a == o, b == o, c == o ) match {
           case ( false, false, false ) => {
-            RCYZeroExp
+            val c1 = RCUNameUtil.fresh()
+            RCYNewExp( 
+              List[RCUNameExp]( c1 ), 
+              RCYParExp( RCYSeqExp( s, a, c1 ), RCYSeqExp( c1, b, c ) ) 
+            )
+          }
+          case ( true, _, _ )  => {
+            val c1 = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( o, c1 ), RCYSeqExp( c1, b, c ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
           }
           case ( false, false, true )  => {
-            RCYZeroExp
+            val c1 = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( c1, c ), RCYSeqExp( a, b, c1 ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
           }
-          case ( false, true, false )  => {
-            RCYZeroExp
-          }
-          case ( false, true, true )   => {
-            RCYZeroExp
-          }
-          case ( true, false, false )  => {
-            RCYZeroExp
-          }
-          case ( true, false, true )   => {
-            RCYZeroExp
-          }
-          case ( true, true, false )   => {
-            RCYZeroExp
-          }
-          case ( true, true, true )    => {
-            RCYZeroExp
-          }
+          case ( false, true, _ )  => {
+            val ( c1, c2 ) = ( RCUNameUtil.fresh(), RCUNameUtil.fresh() )
+            val q = RCYParExp( RCYMsgExp( c1, o ), RCYBrlExp( c2, c ) )
+            txPiForToY( s, o, RCYParExp( RCYSeqExp( a, c1, c2 ), q ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1, c2 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }          
         }
       }
     }
