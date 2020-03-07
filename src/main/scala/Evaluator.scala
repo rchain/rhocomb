@@ -17,7 +17,11 @@ object Evaluator extends Attribution {
 
   val txPiToRho : RCPProcExp => RCRhoCombExp = {
     ( rcpproc : RCPProcExp ) => {
-      RCRZeroExp
+      txPiToY( rcpproc ) match {
+        case rcyproc : RCYProcExp =>
+          txYToRho( rcyproc )
+        case unknown => throw new Exception( s"unexpected translation: ${unknown}" )
+      }
     }
   }
 
@@ -27,9 +31,175 @@ object Evaluator extends Attribution {
     }
   }
 
+  def subst( trgt : RCUNameExp, src : RCUNameExp, p : RCYProcExp ) : RCYProcExp = {
+    p match {
+      case RCYZeroExp             => RCYZeroExp
+      case m@RCYMsgExp( a, b )    => {
+        ( a == src, b == src ) match {
+          case ( false, false ) => m
+          case ( true, false )  => RCYMsgExp( trgt, b )
+          case ( false, true )  => RCYMsgExp( a, trgt )
+          case ( true, true )   => RCYMsgExp( trgt, trgt )
+        }
+      }
+      case d@RCYDupExp( a, b, c ) => {
+        ( a == src, b == src, c == src ) match {
+          case ( false, false, false ) => d
+          case ( true,  false, false ) => RCYDupExp( trgt, b, c )
+          case ( true,  false, true )  => RCYDupExp( trgt, b, trgt )
+          case ( true,  true,  false ) => RCYDupExp( trgt, trgt, c )
+          case ( false, false, true )  => RCYDupExp( a, b, trgt )
+          case ( false, true,  false ) => RCYDupExp( a, trgt, c )
+          case ( false, true,  true )  => RCYDupExp( a, trgt, trgt )
+          case ( true,  true,  true )  => RCYDupExp( trgt, trgt, trgt )
+        }
+      }
+      case k@RCYKillExp( a )      => {
+        if ( a == src ) {
+          RCYKillExp( trgt )
+        }
+        else { k }
+      }
+      case fw@RCYFwdExp( a, b )   => {
+        ( a == src, b == src ) match {
+          case ( false, false ) => fw
+          case ( true, false )  => RCYFwdExp( trgt, b )
+          case ( false, true )  => RCYFwdExp( a, trgt )
+          case ( true, true )   => RCYFwdExp( trgt, trgt )
+        }
+      }
+      case bl@RCYBrlExp( a, b )   => {
+        ( a == src, b == src ) match {
+          case ( false, false ) => bl
+          case ( true, false )  => RCYBrlExp( trgt, b )
+          case ( false, true )  => RCYBrlExp( a, trgt )
+          case ( true, true )   => RCYBrlExp( trgt, trgt )
+        }
+      }
+      case br@RCYBrrExp( a, b )   => {
+        ( a == src, b == src ) match {
+          case ( false, false ) => br
+          case ( true, false )  => RCYBrrExp( trgt, b )
+          case ( false, true )  => RCYBrrExp( a, trgt )
+          case ( true, true )   => RCYBrrExp( trgt, trgt )
+        }
+      }
+      case s@RCYSeqExp( a, b, c ) => {
+        ( a == src, b == src, c == src ) match {
+          case ( false, false, false ) => s
+          case ( true,  false, false ) => RCYSeqExp( trgt, b, c )
+          case ( true,  false, true )  => RCYSeqExp( trgt, b, trgt )
+          case ( true,  true,  false ) => RCYSeqExp( trgt, trgt, c )
+          case ( false, false, true )  => RCYSeqExp( a, b, trgt )
+          case ( false, true,  false ) => RCYSeqExp( a, trgt, c )
+          case ( false, true,  true )  => RCYSeqExp( a, trgt, trgt )
+          case ( true,  true,  true )  => RCYSeqExp( trgt, trgt, trgt )
+        }
+      }
+      case RCYStrExp( p )         => {
+        RCYStrExp( subst( src, trgt, p ) )
+      }
+      case n@RCYNewExp( ns, p )   => {
+        if ( !ns.contains( src ) ) {
+          RCYNewExp( ns, subst( src, trgt, p ) )
+        }
+        else { n }
+      }
+      case RCYParExp( l, r )      => {
+        RCYParExp( subst( src, trgt, l ), subst( src, trgt, r ) )
+      }
+    }
+  }
+
+  def txPiForToY( s : RCUNameExp, o : RCUNameExp, p : RCYProcExp ) : RCRhoCombExp = {
+    p match {
+      case RCYParExp( l, r )    => {
+        val ( c1, c2 ) = ( RCUNameUtil.fresh(), RCUNameUtil.fresh() )
+          ( txPiForToY( c1, o, l ), txPiForToY( c2, o, r ) ) match {
+          case ( fl : RCYProcExp, fr : RCYProcExp ) =>
+            RCYNewExp(
+              List[RCUNameExp]( c1, c2 ),
+              RCYParExp( RCYDupExp( s, c1, c2 ), RCYParExp( fl, fr ) )
+            )
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+        }
+      }
+      case RCYNewExp( ns, q )   => {
+        ns match {
+          case Nil      => throw new Exception( "empty binder list" )
+          case n :: rns => {
+            val c    = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYNewExp( rns, q ) ) match {
+              case fq : RCYProcExp => 
+                RCYNewExp( List[RCUNameExp]( c ), subst( c, n, fq ) )
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
+      }
+      case RCYZeroExp           => {
+        RCYKillExp( s )
+      }
+      case RCYStrExp( p )       => {
+        val c = RCUNameUtil.fresh()
+        txPiForToY( c, o, RCYParExp( p, RCYMsgExp( c, o ) ) ) match {
+          case fq : RCYProcExp =>
+            RCYNewExp( List[RCUNameExp]( c ), RCYParExp( RCYFwdExp( s, c ), fq ) )
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+        }
+      }
+      case RCYMsgExp( a, b )    => {
+        RCYZeroExp
+      }
+      case RCYFwdExp( a, b )    => {
+        RCYZeroExp
+      }
+      case RCYBrlExp( a, b )    => {
+        RCYZeroExp
+      }
+      case RCYBrrExp( a, b )    => {
+        RCYZeroExp
+      }
+      case RCYDupExp( a, b, c ) => {
+        RCYZeroExp
+      }
+      case RCYSeqExp( a, b, c ) => {
+        RCYZeroExp
+      }
+    }
+  }
+
   val txPiToY : RCPProcExp => RCRhoCombExp = {
     ( rcpproc : RCPProcExp ) => {
-      RCYZeroExp
+      rcpproc match {
+        case RCPZeroExp => RCYZeroExp
+        case RCPInpExp  ( s, o, p ) => {
+          txPiToY( p ) match {
+            case fp : RCYProcExp => txPiForToY( s, o, fp )
+            case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+          }
+        }
+        case RCPOutpExp ( s, o )    => RCYMsgExp( s, o )
+        case RCPRepExp  ( p )       => {
+          txPiToY( p ) match {
+            case fp : RCYProcExp => RCYStrExp( fp )
+            case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+          }
+        }
+        case RCPNewExp  ( ns, p )   => {
+          txPiToY( p ) match {
+            case fp : RCYProcExp => RCYNewExp( ns, fp )
+            case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+          }
+        }
+        case RCPParExp  ( l, r )    => {
+          ( txPiToY( l ), txPiToY( r ) ) match {
+            case ( fl : RCYProcExp, fr: RCYProcExp ) =>
+              RCYParExp( fl, fr )
+            case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+          }
+        }
+      }
     }
   }
 

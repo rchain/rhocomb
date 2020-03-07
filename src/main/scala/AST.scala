@@ -25,9 +25,14 @@ case class Mul (l : RCRhoCombExp, r : RCRhoCombExp) extends RCRhoCombExp with Ar
  * Async Pi Calculus
  */
 
-trait RCUNameExp
+trait       RCUNameExp 
 case object RCUWildExp                                                   extends RCUNameExp
 case class  RCUVarExp ( id : String )                                    extends RCUNameExp
+
+object RCUNameUtil {
+  import java.util.UUID.randomUUID
+  def fresh() : RCUNameExp = RCUVarExp( randomUUID().toString )
+}
 
 trait RCPProcExp
 trait RCPCompExp extends RCPProcExp
