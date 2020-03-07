@@ -257,10 +257,70 @@ object Evaluator extends Attribution {
         }
       }
       case RCYDupExp( a, b, c ) => {
-        RCYZeroExp
+        ( a == o, b == o, c == o ) match {
+          case ( false, false, false ) => {
+            val c1 = RCUNameUtil.fresh()
+            RCYNewExp( 
+              List[RCUNameExp]( c1 ), 
+              RCYParExp( RCYSeqExp( s, a, c1 ), RCYDupExp( c1, b, c ) ) 
+            )
+          }
+          case ( false, true, _ )      => {
+            val c1 = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( c1, o ), RCYDupExp( b, c1, c ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }          
+          case ( false, false, true )  => {
+            val c1 = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( c1, c ), RCYDupExp( a, b, c1 ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( true, _, _ )  => {
+            val c1 = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( o, c1 ), RCYDupExp( c1, b, c ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c1 ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
       }
       case RCYSeqExp( a, b, c ) => {
-        RCYZeroExp
+        ( a == o, b == o, c == o ) match {
+          case ( false, false, false ) => {
+            RCYZeroExp
+          }
+          case ( false, false, true )  => {
+            RCYZeroExp
+          }
+          case ( false, true, false )  => {
+            RCYZeroExp
+          }
+          case ( false, true, true )   => {
+            RCYZeroExp
+          }
+          case ( true, false, false )  => {
+            RCYZeroExp
+          }
+          case ( true, false, true )   => {
+            RCYZeroExp
+          }
+          case ( true, true, false )   => {
+            RCYZeroExp
+          }
+          case ( true, true, true )    => {
+            RCYZeroExp
+          }
+        }
       }
     }
   }
