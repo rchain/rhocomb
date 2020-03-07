@@ -149,7 +149,27 @@ object Evaluator extends Attribution {
         }
       }
       case RCYMsgExp( a, b )    => {
-        RCYZeroExp
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCUNameUtil.fresh()
+            RCYNewExp( 
+              List[RCUNameExp]( c ), 
+              RCYParExp( RCYSeqExp( s, c, a ), RCYMsgExp( c, b ) ) 
+            )
+          }
+          case ( false, true )  => {
+            RCYFwdExp( s, a )
+          }
+          case ( true, _ )  => {
+            val c = RCUNameUtil.fresh()
+            txPiForToY( s, o, RCYParExp( RCYFwdExp( c, o ), RCYMsgExp( c, b ) ) ) match {
+              case fq : RCYProcExp => {
+                RCYNewExp( List[RCUNameExp]( c ), fq )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
       }
       case RCYFwdExp( a, b )    => {
         RCYZeroExp
