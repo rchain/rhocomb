@@ -113,7 +113,7 @@ object Optimiser {
     }
   }
 
-  def normalizeRCRName( ast : RCRName ) : RCRNameExp = {
+  def normalizeRCRName( ast : RCRName ) : RCUNameExp = {
     ast match {
       case rq : RCRQuot => RCRQuotExp( normalizeRCRProcess( rq.rcrproc_ ) )
       case _          => throw new Exception( s"unexpected ast: ${ast}" )

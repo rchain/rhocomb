@@ -71,21 +71,41 @@ case class  RCYParExp ( l : RCYProcExp, r : RCYProcExp )                 extends
 
 trait RCRProcExp 
 trait RCRCombExp extends RCRProcExp
-trait RCRNameExp
 
 case object RCRZeroExp                                                   extends RCRhoCombExp with RCRCombExp
-case class  RCRMsgExp ( a : RCRNameExp, p : RCRNameExp )                 extends RCRhoCombExp with RCRCombExp
-case class  RCRDupExp ( a : RCRNameExp, b : RCRNameExp, c : RCRNameExp ) extends RCRhoCombExp with RCRCombExp
-case class  RCRKillExp( a : RCRNameExp )                                 extends RCRhoCombExp with RCRCombExp
-case class  RCRFwdExp ( a : RCRNameExp, b : RCRNameExp )                 extends RCRhoCombExp with RCRCombExp
-case class  RCRBrlExp ( a : RCRNameExp, b : RCRNameExp )                 extends RCRhoCombExp with RCRCombExp
-case class  RCRBrrExp ( a : RCRNameExp, b : RCRNameExp )                 extends RCRhoCombExp with RCRCombExp
-case class  RCRSeqExp ( a : RCRNameExp, b : RCRNameExp, c : RCRNameExp ) extends RCRhoCombExp with RCRCombExp
+case class  RCRMsgExp ( a : RCUNameExp, p : RCUNameExp )                 extends RCRhoCombExp with RCRCombExp
+case class  RCRDupExp ( a : RCUNameExp, b : RCUNameExp, c : RCUNameExp ) extends RCRhoCombExp with RCRCombExp
+case class  RCRKillExp( a : RCUNameExp )                                 extends RCRhoCombExp with RCRCombExp
+case class  RCRFwdExp ( a : RCUNameExp, b : RCUNameExp )                 extends RCRhoCombExp with RCRCombExp
+case class  RCRBrlExp ( a : RCUNameExp, b : RCUNameExp )                 extends RCRhoCombExp with RCRCombExp
+case class  RCRBrrExp ( a : RCUNameExp, b : RCUNameExp )                 extends RCRhoCombExp with RCRCombExp
+case class  RCRSeqExp ( a : RCUNameExp, b : RCUNameExp, c : RCUNameExp ) extends RCRhoCombExp with RCRCombExp
 
-case class  RCRStrExp  ( a : RCRNameExp )                                extends RCRhoCombExp with RCRProcExp
-case class  RCRParExp  ( l : RCRhoCombExp, r : RCRhoCombExp )            extends RCRhoCombExp with RCRProcExp
+case class  RCRStrExp ( a : RCUNameExp )                                 extends RCRhoCombExp with RCRProcExp
+case class  RCRParExp ( l : RCRhoCombExp, r : RCRhoCombExp )             extends RCRhoCombExp with RCRProcExp
 
-case class  RCRQuotExp( p : RCRhoCombExp )                               extends RCRNameExp
+case class  RCRQuotExp( p : RCRhoCombExp )                               extends RCUNameExp
+
+object RCRNameUtil {
+  def inL( x : RCUNameExp ) : RCUNameExp = {
+    RCRQuotExp( RCRBrlExp( x, RCRQuotExp( RCRMsgExp( x, x ) ) ) )
+  }
+  def inR( x : RCUNameExp ) : RCUNameExp = {
+    RCRQuotExp( RCRBrrExp( x, RCRQuotExp( RCRMsgExp( x, x ) ) ) )
+  }
+  def freshFrom( p : RCRProcExp ) : RCUNameExp = {
+    p match {
+      case rcrCE : RCRhoCombExp => {
+        RCRQuotExp(
+          RCRParExp(
+            RCRBrlExp( RCRQuotExp( rcrCE ), RCRQuotExp( rcrCE ) ),
+            RCRBrrExp( RCRQuotExp( rcrCE ), RCRQuotExp( rcrCE ) )
+          )
+        )
+      }
+    }    
+  }
+}
 
 /**
  * User requests

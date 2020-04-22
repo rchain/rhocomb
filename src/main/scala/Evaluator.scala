@@ -25,6 +25,323 @@ object Evaluator extends Attribution {
     }
   }
 
+  def txPiForToRho( s : RCUNameExp, o : RCUNameExp, p : RCYProcExp ) : RCRhoCombExp = {
+    RCRZeroExp
+  }  
+
+  def txYToRhoDirect( p : RCYProcExp )( m : RCUNameExp, n : RCUNameExp ) : RCRhoCombExp = {
+    RCRZeroExp
+  }
+
+  def txPiForToRhoDirect( s : RCUNameExp, o : RCUNameExp, p : RCYProcExp )( m : RCUNameExp, n : RCUNameExp ) : RCRhoCombExp = {
+    txYToRhoDirect( p )( m, n ) match {
+      case fp : RCRProcExp => {
+        txPiForToRhoDirect( s, o, fp )( m, n )
+      }
+      case unknown => throw new Exception( s"unexpected translation: ${unknown}" )
+    }
+  }
+  def txPiForToRhoDirect( s : RCUNameExp, o : RCUNameExp, p : RCRProcExp )( m : RCUNameExp, n : RCUNameExp ) : RCRhoCombExp = {
+    p match {
+      case rcrPar@RCRParExp( l, r )    => {
+        val ( ml, nl, mr, nr ) = ( RCRNameUtil.inL( m ), RCRNameUtil.inL( n ), RCRNameUtil.inR( m ), RCRNameUtil.inR( n ) )
+        //( txPiToRhoDirect( l )( ml, nl ), txPiToRhoDirect( r )( mr, nr ) ) match {
+        ( l, r ) match {
+          case ( fp : RCRProcExp, fq : RCRProcExp ) => {
+            val ( v, w ) = (
+              RCRQuotExp( RCRParExp( RCRMsgExp( n, RCRQuotExp( RCRParExp( RCRBrlExp( m, n ), RCRParExp( fp, fq ) ) ) ), rcrPar ) ), 
+              RCRQuotExp( RCRParExp( RCRMsgExp( n, RCRQuotExp( RCRParExp( RCRBrrExp( m, n ), RCRParExp( fp, fq ) ) ) ), rcrPar ) )
+            )
+            val (n1, n2, q1, q2 ) = ( 
+              RCRQuotExp( RCRParExp( RCRBrlExp( v, w ), RCRMsgExp( m, RCRQuotExp( RCRMsgExp( v, w ) ) ) ) ),
+              RCRQuotExp( RCRParExp( RCRBrrExp( v, w ), RCRMsgExp( m, RCRQuotExp( RCRMsgExp( v, w ) ) ) ) ),
+              RCRQuotExp( RCRParExp( RCRBrlExp( v, w ), RCRMsgExp( n, RCRQuotExp( RCRMsgExp( v, w ) ) ) ) ),
+              RCRQuotExp( RCRParExp( RCRBrrExp( v, w ), RCRMsgExp( n, RCRQuotExp( RCRMsgExp( v, w ) ) ) ) )
+            )
+
+            ( txPiForToRhoDirect( v, o, fp )( ml, nl ), txPiForToRhoDirect( w, o, fq )( mr, nr ) ) match {
+              case ( fl : RCRProcExp, fr : RCRProcExp ) =>
+                RCRParExp( RCRDupExp( s, v, w ), RCRParExp( fl, fr ) )
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+        }        
+      }      
+      case RCRZeroExp           => {
+        RCRKillExp( s )
+      }
+      case RCRStrExp( RCRQuotExp( p ) )       => {
+        //txPiToRhoDirect( p )( m, n ) match {
+        p match {
+          case fp : RCRProcExp => {
+            val nfp = RCRQuotExp( fp )
+            val ( x, v, w, c, mR, nR ) = (
+              RCRNameUtil.inL( RCRNameUtil.inL( nfp ) ),
+              RCRNameUtil.inL( RCRNameUtil.inR( nfp ) ),
+              RCRNameUtil.inR( RCRNameUtil.inL( nfp ) ),
+              RCRNameUtil.inR( RCRNameUtil.inR( nfp ) ),
+              RCRNameUtil.inR( m ), RCRNameUtil.inR( n )
+            )
+            txPiForToRhoDirect( c, o, RCRParExp( p, RCRMsgExp( c, o ) ) )( mR, nR ) match {
+              case fq : RCRProcExp => {
+                txPiForToRhoDirect( n, nR, fq )( mR, nR ) match {
+                  case frRInner : RCRProcExp => {
+                    txPiForToRhoDirect( m, mR, frRInner )( mR, nR ) match {
+                      case frROuter : RCRProcExp => {
+                        val rMsgs = RCRParExp( RCRMsgExp( m, mR ), RCRMsgExp( n, nR ) )
+                        val rPayload = RCRParExp( frROuter, RCRParExp( txRhoD( x, v, w ), rMsgs ) )
+                        val r = RCRMsgExp( o, RCRQuotExp( rPayload ) )
+                        val fstr = txPiForToRhoDirect( c, m, RCRParExp( RCRFwdExp( s, m ), r ) )( m, n )
+                        RCRParExp( fstr, RCRMsgExp( s, m ) )
+                      }
+                      case unknown => throw new Exception( s"unexpected translation ${unknown}" )
+                    }
+                  }
+                  case unknown => throw new Exception( s"unexpected translation ${unknown}" )
+                }
+              }
+              case unknown => throw new Exception( s"unexpected translation ${unknown}" )
+            }
+          }
+          case unknown => throw new Exception( s"unexpected translation ${unknown}" )
+        }        
+      }
+      case msgExp@RCRMsgExp( a, b )    => {
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), msgExp ) )
+            RCRParExp( RCRSeqExp( s, c, a ), RCRMsgExp( c, b ) )
+          }
+          case ( false, true )  => {
+            RCYFwdExp( s, a )
+          }
+          case ( true, _ )  => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), msgExp ) )
+            val pN = RCRParExp( RCRFwdExp( c, o ), RCRMsgExp( c, b ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
+      }
+      case fwdExp@RCRFwdExp( a, b )    => {
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), fwdExp ) )
+            RCRParExp( RCRSeqExp( s, a, c ), RCRFwdExp( c, b ) )
+          }
+          case ( true, false )  => {
+            RCRBrlExp( s, b )
+          }
+          case ( false, true )  => {
+            RCRBrrExp( s, b )
+          }        
+          case ( true, true )   => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), fwdExp ) )
+            val pN = RCRParExp( RCRFwdExp( o, c ), RCRFwdExp( c, b ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
+      }
+      case brlExp@RCRBrlExp( a, b )    => {
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), brlExp ) )
+            RCRParExp( RCRSeqExp( s, a, c ), RCRBrlExp( c, b ) )
+          }
+          case ( false, true )  => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), brlExp ) )
+            val pN = RCRParExp( RCRFwdExp( c, o ), RCRBrlExp( a, c ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( true, _ )  => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), brlExp ) )
+            val pN = RCRParExp( RCRFwdExp( o, c ), RCRBrlExp( c, b ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
+      }
+      case brrExp@RCRBrrExp( a, b )    => {
+        ( o == a, o == b ) match {
+          case ( false, false ) => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), brrExp ) )
+            RCRParExp( RCRSeqExp( s, a, c ), RCRBrrExp( c, b ) )
+          }
+          case ( true, _ )  => {
+            val c = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), brrExp ) )
+            val pN = RCRParExp( RCRFwdExp( o, c ), RCRFwdExp( c, b ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( false, true )  => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), brrExp ) )
+            val ( c2, c3 ) = (
+              RCRNameUtil.inL( c1 ), RCRNameUtil.inR( c1 )
+            )
+            val q = RCRParExp( RCRSeqExp( c1, o, c3 ), RCRBrrExp( c2, c3 ) )
+            val qN = RCRParExp( RCRDupExp( a, c1, c2 ), q )
+            txPiForToRhoDirect( s, o, qN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }          
+        }
+      }
+      case dupExp@RCRDupExp( a, b, c ) => {
+        ( a == o, b == o, c == o ) match {
+          case ( false, false, false ) => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), dupExp ) )
+            RCRParExp( RCRSeqExp( s, a, c1 ), RCRDupExp( c1, b, c ) )
+          }
+          case ( false, true, _ )      => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), dupExp ) )
+            val pN = RCRParExp( RCRFwdExp( c1, o ), RCRDupExp( b, c1, c ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }          
+          case ( false, false, true )  => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), dupExp ) )
+            val pN = RCRParExp( RCRFwdExp( c1, c ), RCRDupExp( a, b, c1 ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( true, _, _ )  => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), dupExp ) )
+            val pN = RCRParExp( RCRFwdExp( o, c1 ), RCRDupExp( c1, b, c ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+        }
+      }
+      case seqExp@RCRSeqExp( a, b, c ) => {
+        ( a == o, b == o, c == o ) match {
+          case ( false, false, false ) => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), seqExp ) )
+            RCRParExp( RCRSeqExp( s, a, c1 ), RCRSeqExp( c1, b, c ) )
+          }
+          case ( true, _, _ )  => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), seqExp ) )
+            val pN = RCRParExp( RCRFwdExp( o, c1 ), RCRSeqExp( c1, b, c ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCYProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( false, false, true )  => {
+            val c1 = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), seqExp ) )
+            val pN = RCRParExp( RCRFwdExp( c1, c ), RCRSeqExp( a, b, c1 ) )
+            txPiForToRhoDirect( s, o, pN )( m, n ) match {
+              case fq : RCRProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case ( false, true, _ )  => {
+            val cN = RCRQuotExp( RCRParExp( RCRMsgExp( n, m ), seqExp ) )
+            val ( c1, c2 ) = ( RCRNameUtil.inL( cN ), RCRNameUtil.inR( cN ) )
+            val q = RCRParExp( RCRMsgExp( c1, o ), RCRBrlExp( c2, c ) )
+            val qN = RCRParExp( RCRSeqExp( a, c1, c2 ), q )
+            txPiForToRhoDirect( s, o, qN )( m, n ) match {
+              case fq : RCYProcExp => fq
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }          
+        }
+      }
+    }
+  }
+
+  def txRhoD( x : RCUNameExp, v : RCUNameExp, w : RCUNameExp ) : RCRhoCombExp = {
+    RCRParExp( RCRDupExp( x, v, w ), RCRParExp( RCRFwdExp( v, x ), RCRStrExp( w ) ) )
+  }
+
+  def txPiToRhoDirect( rcpproc : RCYProcExp )( m : RCUNameExp, n : RCUNameExp ) : RCRhoCombExp = {
+    RCRZeroExp
+  }
+
+  def txPiToRhoDirect( rcpproc : RCPProcExp )( m : RCUNameExp, n : RCUNameExp ) : RCRhoCombExp = {
+    rcpproc match {
+      case RCPZeroExp => RCRZeroExp
+      case RCPInpExp  ( s, o, p ) => {
+        txPiToRhoDirect( p )( m, n ) match {
+          case fp : RCRProcExp => txPiForToRhoDirect( s, o, fp )( m, n )
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+        }
+      }
+      case RCPOutpExp ( s, o )    => RCRMsgExp( s, o )
+      case RCPRepExp  ( p )       => {
+        val ( nM, nN ) = ( RCRNameUtil.inL( m ), RCRNameUtil.inL( n ) )
+        val seedP =
+          txPiToRhoDirect( p )( m, n ) match {
+            case sP : RCRProcExp => sP
+            case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+          }
+        val seed = RCRNameUtil.freshFrom( seedP )
+        val ( mP, nP ) = ( RCRNameUtil.inL( seed ), RCRNameUtil.inR( seed ) )
+        val ( x, v, w ) = ( RCRNameUtil.inL( RCRNameUtil.inL( seed ) ), RCRNameUtil.inL( RCRNameUtil.inR( seed ) ), RCRNameUtil.inR( RCRNameUtil.inL( seed ) ) ) 
+        val outerKickOffP = RCRParExp( txRhoD( x, v, w ), RCRParExp( RCRMsgExp( m, nM ), RCRMsgExp( n, nN ) ) )
+        val innerKickOffP = RCRParExp( txRhoD( x, v, w ), RCRParExp( RCRMsgExp( nM, nM ), RCRMsgExp( nN, nN ) ) )
+
+        txPiForToRhoDirect( n, nP, seedP )( mP, nP ) match {
+          case fp : RCRProcExp => {
+            txPiForToRhoDirect( m, mP, fp )( mP, nP ) match {
+              case ffp : RCRProcExp => {
+                val msgP = RCRMsgExp( x, RCRQuotExp( RCRStrExp( RCRQuotExp( RCRParExp( ffp, innerKickOffP ) ) ) ) )
+                RCRParExp( msgP, outerKickOffP )
+              }
+              case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+            }
+          }
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )        
+        }
+      }
+      case RCPNewExp  ( ns, p )   => {
+        txPiToRhoDirect( p )( m, n ) match {
+          case fp : RCRProcExp => {
+            ns match {
+              case newN :: rns => {
+                val ( lM, lN ) = ( RCRNameUtil.inL( m ), RCRNameUtil.inL( n ) )
+                txPiForToRhoDirect( m, newN, fp )( lM, lN ) match {
+                  case ffp : RCRProcExp => {
+                    RCRParExp( ffp, RCRMsgExp( m, n ) )
+                  }
+                  case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+                }
+              }
+              case Nil => throw new Exception( s"empty binder list ${rcpproc}" )
+            }
+          }
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+        }
+      }
+      case RCPParExp  ( l, r )    => {
+        ( txPiToRhoDirect( l )( m, n ), txPiToRhoDirect( r )( m, n ) ) match {
+          case ( fl : RCRProcExp, fr: RCRProcExp ) =>
+            RCRParExp( fl, fr )
+          case unknown => throw new Exception( s"unexpected translations ${unknown}" )
+        }
+      }
+    }
+  }
+
   val txYToRho : RCYProcExp => RCRhoCombExp = {
     ( rcpproc : RCYProcExp ) => {
       RCRZeroExp

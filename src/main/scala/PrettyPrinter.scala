@@ -84,7 +84,7 @@ object PrettyPrinter extends org.bitbucket.inkytonik.kiama.output.PrettyPrinter 
     }
   }
 
-  def showRCRName( rproc : RCRNameExp ) : Doc = {
+  def showRCRName( rproc : RCUNameExp ) : Doc = {
     rproc match {
       case RCRQuotExp( p )    => "@" <+> show( p )
       case _ => "???"
